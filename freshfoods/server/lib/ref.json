@@ -1,0 +1,48 @@
+{
+    "data": {
+        "ticket": {
+            "subject": "Delivery request for Milk",
+            "description": "<div class=\"pm\"> Hola! Marcus here. Can you deliver Milk to my location ?</div>  <hr>Category: <div id=\"category\">Dairy</div> <br> Location: <div id=\"loc_area2\">San Mateo County</div> <br> Geo: <div id=\"loc_latlong\">37.6,-122.16</div> <br> CartValue: <div id=\"cart_val\">400 </div>\n<hr>",
+            "is_description_truncated": false,
+            "description_text": "Hola! Marcus here. Can you deliver Milk to my location ?    Category:  Dairy    Location:  San Mateo County    Geo:  37.6,-122.16    CartValue:  400",
+            "is_description_text_truncated": false,
+            "due_by": "2020-10-15T21:00:00Z",
+            "fr_due_by": "2020-10-13T21:00:00Z",
+            "fr_escalated": false,
+            "is_escalated": false,
+            "fwd_emails": [],
+            "reply_cc_emails": [],
+            "email_config_id": null,
+            "id": 18,
+            "group_id": null,
+            "product_id": null,
+            "company_id": null,
+            "requester_id": 48010694193,
+            "responder_id": null,
+            "status": 2,
+            "priority": 1,
+            "type": null,
+            "tags": [
+                "delivery_request"
+            ],
+            "spam": false,
+            "source": 2,
+            "tweet_id": null,
+            "cc_emails": [],
+            "to_emails": null,
+            "created_at": "2020-10-13T11:41:58Z",
+            "updated_at": "2020-10-13T11:41:58Z",
+            "attachments": [],
+            "custom_fields": {}
+        },
+        "requester": {
+            "id": 48010694193,
+            "name": "Marcus Aurelius",
+            "email": "marcus.aurelius@example.com",
+            "mobile": null,
+            "phone": null,
+            "language": "en",
+            "created_at": "2020-10-13T07:48:43Z"
+        }
+    }
+}

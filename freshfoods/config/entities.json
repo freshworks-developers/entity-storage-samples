@@ -1,0 +1,90 @@
+{
+  "delivery_requests": {
+    "fields": [{
+        "name": "contact_id",
+        "label": "Contact ID",
+        "type": "TEXT"
+      },
+      {
+        "name": "contact_name",
+        "label": "Contact Name",
+        "type": "TEXT"
+      },
+      {
+        "name": "ticket_id",
+        "label": "Ticket ID",
+        "type": "NUMBER"
+      },
+      {
+        "name": "loc_lat",
+        "label": "Latitude",
+        "type": "DECIMAL"
+      },
+      {
+        "name": "loc_long",
+        "label": "Longitude",
+        "type": "DECIMAL"
+      },
+      {
+        "name": "loc_zipcode",
+        "label": "Zipcode",
+        "type": "NUMBER",
+        "filterable": true
+      },
+      {
+        "name": "loc_locality",
+        "label": "Locality",
+        "type": "TEXT"
+      },
+      {
+        "name": "loc_area2",
+        "label": "Area2",
+        "type": "TEXT",
+        "filterable": true
+      },
+      {
+        "name": "loc_area1",
+        "label": "Area1",
+        "type": "TEXT",
+        "filterable": true
+      },
+      {
+        "name": "loc_country",
+        "label": "Country",
+        "type": "TEXT"
+      },
+      {
+        "name": "cart_value",
+        "label": "Cart Value",
+        "type": "NUMBER"
+      },
+      {
+        "name": "category",
+        "label": "Category",
+        "type": "TEXT",
+        "filterable": true
+      },
+      {
+        "name": "near_del_cen",
+        "label": "Delivery Centers Nearby",
+        "type": "PARAGRAPH"
+      },
+      {
+        "name": "status",
+        "label": "Status",
+        "type": "TEXT"
+      },
+      {
+        "name": "cart_value_bucket",
+        "label": "Bucket",
+        "type": "NUMBER",
+        "filterable": true
+      },
+      {
+        "name": "items",
+        "label": "Items",
+        "type": "PARAGRAPH"
+      }
+    ]
+  }
+}

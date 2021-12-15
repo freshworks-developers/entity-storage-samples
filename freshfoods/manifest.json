@@ -1,0 +1,21 @@
+{
+  "platform-version": "2.0",
+  "product": {
+    "freshdesk": {
+      "location": {
+        "full_page_app": {
+          "url": "template.html",
+          "icon": "assets/img/icon.png"
+        },
+        "ticket_sidebar": {
+          "url": "sidebar.html",
+          "icon": "assets/img/icon.png"
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "axios": "0.20.0",
+    "cheerio": "1.0.0-rc.10"
+  }
+}

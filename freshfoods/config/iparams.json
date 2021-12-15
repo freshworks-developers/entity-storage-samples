@@ -1,0 +1,14 @@
+{
+    "gmp-api-key": {
+        "display_name": "Google Maps API key",
+        "description": "Please enter your Google Maps API Key.",
+        "type": "text",
+        "required": true
+    },
+    "logger-url": {
+        "display_name": "logger-url",
+        "description": "Please enter your external Logger endpoint",
+        "type": "text",
+        "required": true
+    }
+}
