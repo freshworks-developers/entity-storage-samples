@@ -1,0 +1,24 @@
+{
+  "tasks": {
+    "fields": [
+      {
+        "name": "name",
+        "label": "Task name",
+        "type": "text",
+        "filterable": true,
+        "required": true
+      },
+      {
+        "name": "status",
+        "label": "Status",
+        "type": "enum",
+        "filterable": true,
+        "required": true,
+        "choices": [
+          { "id": 1, "value": "Pending" },
+          { "id": 2, "value": "Done" }
+        ]
+      }
+    ]
+  }
+}

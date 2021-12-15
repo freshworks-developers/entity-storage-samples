@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Custom Objects ToDo</title>
+    <link rel="stylesheet" type="text/css" href="styles/style.css" />
+    <script src="https://static.freshdev.io/fdk/2.0/assets/fresh_client.js"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/@freshworks/crayons/dist/crayons/crayons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/@freshworks/crayons/dist/crayons/crayons.js"
+    ></script>
+  </head>
+
+  <body>
+    <div class="fw-widget-wrapper">
+      <form id="add-task-form" action="" method="POST">
+        <div id="form-wrapper">
+          <fw-input
+            label="Add Task"
+            autocomplete="off"
+            clear-input
+            icon-left="edit"
+            max-length="256"
+            min-length="3"
+            required
+          ></fw-input>
+          <fw-button type="submit" size="icon"
+            ><fw-icon name="new" color="white"></fw-icon>
+          </fw-button>
+        </div>
+      </form>
+      <h2>Pending</h2>
+      <div id="pending-tasks"></div>
+      <h2>Done</h2>
+      <div id="done-tasks"></div>
+    </div>
+  </body>
+  <script src="scripts/app.js"></script>
+</html>
