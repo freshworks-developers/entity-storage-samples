@@ -3,87 +3,87 @@
     "fields": [{
         "name": "contact_id",
         "label": "Contact ID",
-        "type": "TEXT"
+        "type": "text"
       },
       {
         "name": "contact_name",
         "label": "Contact Name",
-        "type": "TEXT"
+        "type": "text"
       },
       {
         "name": "ticket_id",
         "label": "Ticket ID",
-        "type": "NUMBER"
+        "type": "integer"
       },
       {
         "name": "loc_lat",
         "label": "Latitude",
-        "type": "DECIMAL"
+        "type": "float"
       },
       {
         "name": "loc_long",
         "label": "Longitude",
-        "type": "DECIMAL"
+        "type": "float"
       },
       {
         "name": "loc_zipcode",
         "label": "Zipcode",
-        "type": "NUMBER",
+        "type": "integer",
         "filterable": true
       },
       {
         "name": "loc_locality",
         "label": "Locality",
-        "type": "TEXT"
+        "type": "text"
       },
       {
         "name": "loc_area2",
         "label": "Area2",
-        "type": "TEXT",
+        "type": "text",
         "filterable": true
       },
       {
         "name": "loc_area1",
         "label": "Area1",
-        "type": "TEXT",
+        "type": "text",
         "filterable": true
       },
       {
         "name": "loc_country",
         "label": "Country",
-        "type": "TEXT"
+        "type": "text"
       },
       {
         "name": "cart_value",
         "label": "Cart Value",
-        "type": "NUMBER"
+        "type": "integer"
       },
       {
         "name": "category",
         "label": "Category",
-        "type": "TEXT",
+        "type": "text",
         "filterable": true
       },
       {
         "name": "near_del_cen",
         "label": "Delivery Centers Nearby",
-        "type": "PARAGRAPH"
+        "type": "paragraph"
       },
       {
         "name": "status",
         "label": "Status",
-        "type": "TEXT"
+        "type": "text"
       },
       {
         "name": "cart_value_bucket",
         "label": "Bucket",
-        "type": "NUMBER",
+        "type": "integer",
         "filterable": true
       },
       {
         "name": "items",
         "label": "Items",
-        "type": "PARAGRAPH"
+        "type": "paragraph"
       }
     ]
   }
