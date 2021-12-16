@@ -1,57 +1,74 @@
 {
   "delivery_requests": {
-    "fields": [{
+    "fields": [
+      {
         "name": "contact_id",
         "label": "Contact ID",
-        "type": "text"
+        "type": "text",
+        "required": true
       },
       {
         "name": "contact_name",
         "label": "Contact Name",
-        "type": "text"
+        "type": "text",
+        "required": true
       },
       {
         "name": "ticket_id",
         "label": "Ticket ID",
-        "type": "integer"
-      },
-      {
-        "name": "loc_lat",
-        "label": "Latitude",
-        "type": "float"
-      },
-      {
-        "name": "loc_long",
-        "label": "Longitude",
-        "type": "float"
-      },
-      {
-        "name": "loc_zipcode",
-        "label": "Zipcode",
         "type": "integer",
-        "filterable": true
+        "required": true
       },
       {
-        "name": "loc_locality",
-        "label": "Locality",
-        "type": "text"
+        "name": "created_at",
+        "label": "Created At",
+        "type": "datetime",
+        "required": true
       },
       {
-        "name": "loc_area2",
-        "label": "Area2",
-        "type": "text",
-        "filterable": true
-      },
-      {
-        "name": "loc_area1",
-        "label": "Area1",
-        "type": "text",
-        "filterable": true
-      },
-      {
-        "name": "loc_country",
-        "label": "Country",
-        "type": "text"
+        "name": "location",
+        "label": "Delivery location",
+        "type": "section",
+        "fields": [
+          {
+            "name": "loc_lat",
+            "label": "Latitude",
+            "type": "float"
+          },
+          {
+            "name": "loc_long",
+            "label": "Longitude",
+            "type": "float"
+          },
+          {
+            "name": "loc_zipcode",
+            "label": "Zipcode",
+            "type": "integer",
+            "filterable": true
+          },
+          {
+            "name": "loc_locality",
+            "label": "Locality",
+            "type": "text"
+          },
+          {
+            "name": "loc_area2",
+            "label": "Area2",
+            "type": "text",
+            "filterable": true
+          },
+          {
+            "name": "loc_area1",
+            "label": "Area1",
+            "type": "text",
+            "filterable": true
+          },
+          {
+            "name": "loc_country",
+            "label": "Country",
+            "type": "text"
+          }
+        ]
       },
       {
         "name": "cart_value",
@@ -62,7 +79,8 @@
         "name": "category",
         "label": "Category",
         "type": "text",
-        "filterable": true
+        "filterable": true,
+        "required": false
       },
       {
         "name": "near_del_cen",
@@ -72,7 +90,14 @@
       {
         "name": "status",
         "label": "Status",
-        "type": "text"
+        "type": "enum",
+        "choices": [
+          { "id": 0, "value": "New" },
+          { "id": 1, "value": "Processing" },
+          { "id": 2, "value": "Shipped" },
+          { "id": 3, "value": "Delivered" },
+          { "id": 4, "value": "Cancelled" }
+        ]
       },
       {
         "name": "cart_value_bucket",
@@ -84,6 +109,11 @@
         "name": "items",
         "label": "Items",
         "type": "paragraph"
+      },
+      {
+        "name": "expected_delivery_date",
+        "label": "Expected delivery date",
+        "type": "date"
       }
     ]
   }
