@@ -1,5 +1,5 @@
 {
-  "platform-version": "2.0",
+  "platform-version": "2.2",
   "product": {
     "freshdesk": {
       "location": {
@@ -17,5 +17,9 @@
   "dependencies": {
     "axios": "0.20.0",
     "cheerio": "1.0.0-rc.10"
+  },
+  "engines": {
+    "node": "12.22.7",
+    "fdk": "7.2.1"
   }
 }
