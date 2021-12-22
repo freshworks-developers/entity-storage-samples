@@ -19,26 +19,32 @@
 
   <body>
     <div class="fw-widget-wrapper">
-      <form id="add-task-form" action="" method="POST">
-        <div id="form-wrapper">
+      <form id="todo-form" action="" method="post">
+        <div class="form-row">
           <fw-input
-            label="Add Task"
-            autocomplete="off"
+            id="todo-input"
+            name="todoName"
             clear-input
-            icon-left="edit"
+            autocomplete="off"
             max-length="256"
             min-length="3"
+            placeholder="Enter task name..."
             required
           ></fw-input>
-          <fw-button type="submit" size="icon"
-            ><fw-icon name="new" color="white"></fw-icon>
-          </fw-button>
+          <fw-button color="primary" type="submit" expand
+            ><fw-icon name="new" color="white"></fw-icon> Add</fw-button
+          >
         </div>
       </form>
-      <h2>Pending</h2>
-      <div id="pending-tasks"></div>
-      <h2>Done</h2>
-      <div id="done-tasks"></div>
+
+      <fw-tabs>
+        <fw-tab tab-header="ToDo">
+          <div id="todo-tasks"></div>
+        </fw-tab>
+        <fw-tab tab-header="Done">
+          <div id="done-tasks"></div>
+        </fw-tab>
+      </fw-tabs>
     </div>
   </body>
   <script src="scripts/app.js"></script>

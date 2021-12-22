@@ -15,7 +15,7 @@
         "filterable": true,
         "required": true,
         "choices": [
-          { "id": 1, "value": "Pending" },
+          { "id": 1, "value": "ToDo" },
           { "id": 2, "value": "Done" }
         ]
       }

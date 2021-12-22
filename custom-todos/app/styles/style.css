@@ -15,9 +15,9 @@ html {
   align-items: center;
 }
 
-#form-wrapper {
+.form-row {
   display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  align-items: baseline;
 }
