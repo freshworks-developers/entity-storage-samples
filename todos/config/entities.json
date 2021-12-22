@@ -1,5 +1,5 @@
 {
-  "tasks": {
+  "todos": {
     "fields": [
       {
         "name": "name",
