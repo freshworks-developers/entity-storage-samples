@@ -12,6 +12,11 @@
     <script src="assets/js/data.js"></script>
     <script src="assets/js/helper.js"></script>
     <script src="assets/js/chart.js"></script>
+
+    <!-- Vue -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="assets/js/controller.js"></script>
+
     <!-- Scripts - Crayons! -->
     <script
       type="module"
@@ -21,10 +26,6 @@
       nomodule
       src="https://unpkg.com/@freshworks/crayons/dist/crayons/crayons.js"
     ></script>
-
-    <!-- Vue -->
-    <script src="https://npmcdn.com/vue/dist/vue.js"></script>
-    <script src="assets/js/controller.js"></script>
 
     <!-- Bootstrap for layout  -->
     <script
@@ -335,8 +336,8 @@
                 <div class="row">
                   <div class="col-sm-6">
                     <b>
-                      {{ active_item.category == "[M]" ? "Milk & Dairy
-                      products":"Fresh produce (Fruits)" }}
+                      {{ active_item.category == "[M]" ?
+                      "Milk & Dairy products":"Fresh produce (Fruits)" }}
                     </b>
                     <br />
                     {{active_item.items}}
@@ -490,7 +491,7 @@
     <!-- End View -->
     <script></script>
     <script>
-      Vue.config.silent = true;
+      // Vue.config.silent = true;
       d_app = new Vue({
         el: "#app",
         mounted() {
