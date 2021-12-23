@@ -4,26 +4,22 @@
       {
         "name": "contact_id",
         "label": "Contact ID",
-        "type": "text",
-        "required": true
+        "type": "text"
       },
       {
         "name": "contact_name",
         "label": "Contact Name",
-        "type": "text",
-        "required": true
+        "type": "text"
       },
       {
         "name": "ticket_id",
         "label": "Ticket ID",
-        "type": "integer",
-        "required": true
+        "type": "integer"
       },
       {
         "name": "created_at",
         "label": "Created At",
-        "type": "datetime",
-        "required": true
+        "type": "datetime"
       },
       {
         "name": "location",
@@ -79,8 +75,7 @@
         "name": "category",
         "label": "Category",
         "type": "text",
-        "filterable": true,
-        "required": false
+        "filterable": true
       },
       {
         "name": "near_del_cen",
@@ -109,11 +104,6 @@
         "name": "items",
         "label": "Items",
         "type": "paragraph"
-      },
-      {
-        "name": "expected_delivery_date",
-        "label": "Expected delivery date",
-        "type": "date"
       }
     ]
   }

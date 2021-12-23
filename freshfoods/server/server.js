@@ -21,46 +21,38 @@ exports = {
       args.data.ticket.tags.includes("delivery_request")
     ) {
       // Get the ticket fields
-      console.info("🏍 We have a Delivery Request!");
-      console.info("Logging args. Parsing request data...");
-      util.logIt(args.iparams["logger-url"], "onTicketCreate", args);
+      console.log("🏍 We have a Delivery Request!");
+      console.log("Logging args. Parsing request data...");
       Promise.resolve(util.parseStandardFields(args.data))
         .then((data) => {
-          console.info("(1/4) Reverse geocoding");
+          console.log("(1/4) Reverse geocoding");
           return util.reverseGeoCode(args, data);
         })
         .then((data) => {
-          console.info("(2/4) Obtaining distance matrix");
+          console.log("(2/4) Obtaining distance matrix");
           return util.computeDistanceMatrix(args, data);
         })
         .then((data) => {
-          console.info("(3/4) Creating a delivery request");
+          console.log("(3/4) Creating a delivery request");
           return util.createDeliveryRequest(args, data, "delivery_requests");
         })
-        .then((response) => {
-          util.logIt(
-            args.iparams["logger-url"],
-            "entityRecordCreated",
-            response.data
-          );
-          console.info("(4/4) Entity record creation was successful!");
+        .then(() => {
+          console.log("(4/4) Entity record creation was successful!");
         })
         .catch((err) => {
-          console.error("Something went wrong", err);
-          util.logIt(
-            args.iparams["logger-url"],
-            "entityRecordCreateFailed",
-            err
+          util.handleError(
+            err,
+            "Something went wrong with onTicketCreateHandler"
           );
         });
     } else {
-      console.info("Not a Delivery Request! Never Mind");
+      console.log("Not a Delivery Request! Never Mind");
     }
   },
 
   onAppInstallHandler: function () {
     // Log successful app installation
-    console.info("onAppInstall handler is triggered");
+    console.log("onAppInstall handler is triggered");
     renderData();
   },
 };

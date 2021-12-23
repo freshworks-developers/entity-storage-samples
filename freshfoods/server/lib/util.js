@@ -75,7 +75,8 @@ async function reverseGeoCode(args, data) {
   try {
     response = await $request.get(url);
   } catch (e) {
-    throw e;
+    handleError(e, "Unable to get response for reverseGeoCode");
+    return;
   }
 
   // Get locality
@@ -133,7 +134,8 @@ async function computeDistanceMatrix(args, data) {
   try {
     response = await $request.get(url);
   } catch (e) {
-    throw e;
+    handleError(e, "Unable to get response for computeDistanceMatrix");
+    return;
   }
 
   Object.assign(data, {
@@ -152,18 +154,8 @@ function createDeliveryRequest(args, data, ent_name) {
   return delivery_requests.create(data);
 }
 
-// Logging utility function
-function logIt(u, p, m) {
-  try {
-    let msg = JSON.stringify(m);
-    console.log("Logging : ", msg);
-    $request.post(`${u}/${p}`, {
-      body: msg,
-    });
-  } catch (error) {
-    console.error("Oops, Something went wrong!");
-    console.error(error);
-  }
+function handleError(error, msg = "") {
+  console.log(`Error: ${msg}`, error);
 }
 
 exports = {
@@ -172,5 +164,5 @@ exports = {
   computeDistanceMatrix,
   reverseGeoCode,
   createDeliveryRequest,
-  logIt,
+  handleError,
 };
