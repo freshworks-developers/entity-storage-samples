@@ -15,7 +15,7 @@ let co_record = {
   cart_value: 0,
   near_del_cen: "",
   category: "",
-  status: "0",
+  status: "New",
   items: "",
   cart_value_bucket: 0,
 };
@@ -59,7 +59,7 @@ function parseStandardFields(data) {
     cart_value: parseInt(cv),
     category: categ.includes("Dairy") ? "[M]" : "[F]",
     cart_value_bucket: getCartValueCategory(parseInt(cv)),
-    status: "0",
+    status: "New",
     items: items,
   };
 }
@@ -73,47 +73,48 @@ async function reverseGeoCode(args, data) {
   let response;
 
   try {
-    response = await $request.get(url);
+    const res = await $request.get(url);
+    response = JSON.parse(res.response);
   } catch (e) {
     handleError(e, "Unable to get response for reverseGeoCode");
     return;
   }
-
   // Get locality
-  const ac = response.data.results[0].address_components;
-  for (const i in ac) {
-    if (ac[i].types.includes("locality")) {
-      t_cor.loc_locality = ac[i].long_name;
+  const ac = response.results[0].address_components;
+
+  for (const i of ac) {
+    if (i.types.includes("locality")) {
+      t_cor.loc_locality = i.long_name;
       break;
     }
   }
   // Get loc_zipcode
-  for (const i in ac) {
-    if (ac[i].types.includes("postal_code")) {
-      t_cor.loc_zipcode = parseInt(ac[i].long_name);
+  for (const i of ac) {
+    if (i.types.includes("postal_code")) {
+      t_cor.loc_zipcode = parseInt(i.long_name);
       break;
     }
   }
   // Get loc_area2
-  for (const i in ac) {
-    if (ac[i].types.includes("administrative_area_level_2")) {
-      t_cor.loc_area2 = ac[i].long_name;
+  for (const i of ac) {
+    if (i.types.includes("administrative_area_level_2")) {
+      t_cor.loc_area2 = i.long_name;
       break;
     }
   }
 
   // Get loc_area1
-  for (const i in ac) {
-    if (ac[i].types.includes("administrative_area_level_1")) {
-      t_cor.loc_area1 = ac[i].long_name;
+  for (const i of ac) {
+    if (i.types.includes("administrative_area_level_1")) {
+      t_cor.loc_area1 = i.long_name;
       break;
     }
   }
 
   // Get country
-  for (const i in ac) {
-    if (ac[i].types.includes("country")) {
-      t_cor.loc_country = ac[i].long_name;
+  for (const i of ac) {
+    if (i.types.includes("country")) {
+      t_cor.loc_country = i.long_name;
       break;
     }
   }
@@ -132,15 +133,17 @@ async function computeDistanceMatrix(args, data) {
   let response;
 
   try {
-    response = await $request.get(url);
+    const res = await $request.get(url);
+    response = JSON.parse(res.response);
   } catch (e) {
     handleError(e, "Unable to get response for computeDistanceMatrix");
     return;
   }
 
   Object.assign(data, {
-    near_del_cen: JSON.stringify(response.data.rows[0].elements),
+    near_del_cen: JSON.stringify(response.rows[0].elements),
   });
+  console.log(data);
   return data;
 }
 

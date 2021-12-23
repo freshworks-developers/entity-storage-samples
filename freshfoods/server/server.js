@@ -1,19 +1,6 @@
 const util = require("./lib/util");
 
-let { co_record } = util;
-
 exports = {
-  events: [
-    {
-      event: "onAppInstall",
-      callback: "onAppInstallHandler",
-    },
-    {
-      event: "onTicketCreate",
-      callback: "onTicketCreateHandler",
-    },
-  ],
-
   onTicketCreateHandler: function (args) {
     // Check if this is a delivery request
     if (
