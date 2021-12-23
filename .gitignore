@@ -5,3 +5,4 @@ coverage/
 .vscode/
 node_modules/
 log/
+**/server/package-lock.json

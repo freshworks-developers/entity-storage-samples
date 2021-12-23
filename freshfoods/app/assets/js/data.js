@@ -4,6 +4,11 @@ let milkIcon = "https://i.imgur.com/rgclJxa.png",
   markersOnScreen = {},
   pointsOnScreen = [],
   styleLoaded = false,
+  // Filters for classifying delivery requests into 2 categories based on the item category
+  fruit = ["in", "[F]", ["get", "category"]],
+  milk = ["in", "[M]", ["get", "category"]],
+  // Colors to use for the categories
+  filter = { fruit, milk },
   colors = ["#fbbc05", "#00a1f1", "#e1e1e0"],
   planningMode = false,
   planDecided = false,

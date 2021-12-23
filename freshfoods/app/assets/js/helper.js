@@ -1,12 +1,14 @@
 var popup;
 var planPopup;
 
-function initMap() {
+function initMap(accessToken) {
+  // Mapbox Access Token
+  mapboxgl.accessToken = accessToken;
   var map = new mapboxgl.Map({
     container: "map",
     zoom: 10,
     center: [-122.226117, 37.48036],
-    style: "mapbox://styles/hemchander/ckfurlbhg5yf119k2kxwed62s",
+    style: "mapbox://styles/mapbox/streets-v11",
   });
 
   map.addControl(new mapboxgl.NavigationControl());
@@ -135,7 +137,10 @@ function createDelSpots(pt, text) {
 }
 
 function changeData(map, data) {
-  map.getSource("delivery_requests").setData(data);
+  console.log("changeData called", data);
+  const src = map.getSource("delivery_requests");
+  if (src === undefined) return;
+  src.setData(data);
   for (id in markersOnScreen) {
     markersOnScreen[id].remove();
   }

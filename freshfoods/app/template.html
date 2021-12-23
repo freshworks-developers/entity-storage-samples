@@ -8,7 +8,7 @@
       content="initial-scale=1,maximum-scale=1,user-scalable=no"
     />
     <!-- Scripts -->
-    <script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
     <script src="assets/js/data.js"></script>
     <script src="assets/js/helper.js"></script>
     <script src="assets/js/chart.js"></script>
@@ -46,7 +46,7 @@
 
     <!-- Stylesheets -->
     <link
-      href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css"
+      href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css"
       rel="stylesheet"
     />
     <link
@@ -533,13 +533,6 @@
         },
         methods: {
           init() {
-            // Mapbox Access Token
-            mapboxgl.accessToken =
-              "pk.eyJ1IjoiaGVtY2hhbmRlciIsImEiOiJja2ZvMWNvNTUwaW4wMnhtcXd6NndjZ3p0In0.-Ww7DByjuhaLrjrEiEse6g";
-            // Get the map!
-            map = initMap();
-            // Load the icons
-            addIcons(map);
             // Filters for classifying delivery requests into 2 categories based on the item category
             var fruit = ["in", "[F]", ["get", "category"]];
             var milk = ["in", "[M]", ["get", "category"]];
@@ -547,83 +540,100 @@
             var filter = { fruit, milk };
             app
               .initialized()
-              .then((c) => {
-                let entity = c.db.entity({ version: "v1" });
-                let dr = entity.get("delivery_requests");
-                dr.getAll()
-                  .then((data) => {
-                    document.getElementsByClassName("loader")[0].style.display =
-                      "none";
-                    console.info("Custom Objects Loaded");
-                    let co_record_set = data.records.map((i) => {
-                      return i.data;
+              .then((client) => {
+                client.iparams.get("mapbox_token").then((data) => {
+                  // Get the map!
+                  map = initMap(data.mapbox_token);
+                  // Load the icons
+                  addIcons(map);
+                  map.on("load", function () {
+                    // add a clustered GeoJSON source for a sample set of delivery requests
+                    map.addSource("delivery_requests", {
+                      type: "geojson",
+                      data: mapTransform(mockData),
+                      cluster: true,
+                      clusterRadius: 80,
+                      clusterProperties: {
+                        // keep separate counts for each item category in a cluster
+                        fruit: ["+", ["case", fruit, 1, 0]],
+                        milk: ["+", ["case", milk, 1, 0]],
+                      },
                     });
-                    console.info(co_record_set);
-                    changeData(map, mapTransform(co_record_set));
-                    this.delivery_req_list = co_record_set;
-                    mockData = co_record_set;
-                  })
-                  .catch((err) => {
-                    console.error(err);
-                    document.getElementsByClassName("loader")[0].style.display =
-                      "none";
+                    map.addSource("delivery-centers", {
+                      type: "geojson",
+                      data: {
+                        type: "FeatureCollection",
+                        features: [
+                          createGeoJSONCircle([-122.331298, 37.564457], 15),
+                          createGeoJSONCircle([-122.130387, 37.420972], 9),
+                          createGeoJSONCircle([-122.036744, 37.320918], 5),
+                        ],
+                      },
+                    });
+                    //Pin the hub labels
+                    [
+                      {
+                        loc: [-122.331298, 37.564457],
+                        name: "🎪 San Mateo Central Hub",
+                      },
+                      {
+                        loc: [-122.130387, 37.420972],
+                        name: "🎪 Palo Alto Hub",
+                      },
+                      {
+                        loc: [-122.036744, 37.320918],
+                        name: "🎪 Cupertino Hub",
+                      },
+                    ].map((i) => {
+                      createDelSpots(i.loc, i.name);
+                    });
+
+                    map.addSource("planning-ds", {
+                      type: "geojson",
+                      data: {
+                        type: "FeatureCollection",
+                        features: [
+                          createGeoJSONCircle([-122.331298, 37.564457], 0),
+                        ],
+                      },
+                    });
+                    // circle and symbol layers for rendering individual delivery requests (unclustered points)
+                    // map.on('styledata', function () {
+                    addLayers(map, filter, colors);
+                    // });
+                    // after the GeoJSON data is loaded, update markers on the screen and do so on every map move/moveend
+                    registerEvents(map);
+                    console.log("--- Map loaded ---");
+
+                    console.log("--- Handle Custom Objects ---")
+                    let entity = client.db.entity({ version: "v1" });
+                    let dr = entity.get("delivery_requests");
+                    dr.getAll()
+                      .then((data) => {
+                        document.getElementsByClassName("loader")[0].style.display =
+                          "none";
+                        console.info("Custom Objects Loaded");
+                        let co_record_set = data.records.map((i) => {
+                          return i.data;
+                        });
+                        console.info(co_record_set);
+                        changeData(map, mapTransform(co_record_set));
+                        this.delivery_req_list = co_record_set;
+                        mockData = co_record_set;
+                      })
+                      .catch((err) => {
+                        console.error(err);
+                        document.getElementsByClassName("loader")[0].style.display =
+                          "none";
+                      });
                   });
+                });
               })
               .catch((err) => {
                 console.error(err);
                 document.getElementsByClassName("loader")[0].style.display =
                   "none";
               });
-            map.on("load", function () {
-              // add a clustered GeoJSON source for a sample set of delivery requests
-              map.addSource("delivery_requests", {
-                type: "geojson",
-                data: mapTransform(mockData),
-                cluster: true,
-                clusterRadius: 80,
-                clusterProperties: {
-                  // keep separate counts for each item category in a cluster
-                  fruit: ["+", ["case", fruit, 1, 0]],
-                  milk: ["+", ["case", milk, 1, 0]],
-                },
-              });
-              map.addSource("delivery-centers", {
-                type: "geojson",
-                data: {
-                  type: "FeatureCollection",
-                  features: [
-                    createGeoJSONCircle([-122.331298, 37.564457], 15),
-                    createGeoJSONCircle([-122.130387, 37.420972], 9),
-                    createGeoJSONCircle([-122.036744, 37.320918], 5),
-                  ],
-                },
-              });
-              //Pin the hub labels
-              [
-                {
-                  loc: [-122.331298, 37.564457],
-                  name: "🎪 San Mateo Central Hub",
-                },
-                { loc: [-122.130387, 37.420972], name: "🎪 Palo Alto Hub" },
-                { loc: [-122.036744, 37.320918], name: "🎪 Cupertino Hub" },
-              ].map((i) => {
-                createDelSpots(i.loc, i.name);
-              });
-
-              map.addSource("planning-ds", {
-                type: "geojson",
-                data: {
-                  type: "FeatureCollection",
-                  features: [createGeoJSONCircle([-122.331298, 37.564457], 0)],
-                },
-              });
-              // circle and symbol layers for rendering individual delivery requests (unclustered points)
-              // map.on('styledata', function () {
-              addLayers(map, filter, colors);
-              // });
-              // after the GeoJSON data is loaded, update markers on the screen and do so on every map move/moveend
-              registerEvents(map);
-            });
           },
           gotodetail: function (e) {
             context = e.target.dataset.context;
