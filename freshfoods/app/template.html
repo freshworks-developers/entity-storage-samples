@@ -68,8 +68,8 @@
         <fw-spinner size="large"></fw-spinner>
       </div>
     </div>
+    <fw-toast id="type_toast"></fw-toast>
     <div id="app">
-      <fw-toast id="type_toast"></fw-toast>
 
       <!-- Start View  -->
       <div id="list">
@@ -541,6 +541,7 @@
             app
               .initialized()
               .then((client) => {
+                window.client = client;
                 client.iparams.get("mapbox_token").then((data) => {
                   // Get the map!
                   map = initMap(data.mapbox_token);

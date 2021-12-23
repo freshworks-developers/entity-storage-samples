@@ -267,7 +267,7 @@ function registerEvents(map) {
         type: "success",
         timeout: 10000,
         content: `🎪 Wohoo! That covers ${planCoverageAreas.length} new customer(s) worth $ ${planCoverageAreaTotal} / month ! 🎉`,
-      });
+      }).catch(console.log);
       planDecided = true;
       document.getElementById("plannerm").checked = false;
     }
