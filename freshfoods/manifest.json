@@ -14,8 +14,8 @@
       }
     }
   },
+  "whitelisted-domains": ["https://i.imgur.com", "https://maps.googleapis.com"],
   "dependencies": {
-    "axios": "0.20.0",
     "cheerio": "1.0.0-rc.10"
   },
   "engines": {

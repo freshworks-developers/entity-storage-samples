@@ -1,63 +1,83 @@
 <html>
-
-<head>
+  <head>
     <script src="https://static.freshcloud.io/fdk/2.0/assets/fresh_client.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
-    <script type="module" src="https://unpkg.com/@freshworks/crayons/dist/crayons/crayons.esm.js">
-    </script>
-    <script nomodule src="https://unpkg.com/@freshworks/crayons/dist/crayons/crayons.js">
-    </script>
-    <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
+    <script
+      type="module"
+      src="https://unpkg.com/@freshworks/crayons/dist/crayons/crayons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/@freshworks/crayons/dist/crayons/crayons.js"
+    ></script>
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css"
+      rel="stylesheet"
+    />
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-        }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif !important;
+      }
 
-        #map {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 100%;
-            left: 0;
-            height: 80%;
-        }
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        left: 0;
+        height: 80%;
+      }
 
-        #address {
-            position: absolute;
-            bottom: 0;
-            font-size: 12px;
-        }
+      #address {
+        position: absolute;
+        bottom: 0;
+        font-size: 12px;
+      }
     </style>
     <script>
-        mapboxgl.accessToken = 'pk.eyJ1IjoiaGVtY2hhbmRlciIsImEiOiJja2ZvMWNvNTUwaW4wMnhtcXd6NndjZ3p0In0.-Ww7DByjuhaLrjrEiEse6g';
-        app.initialized().then((c) => {
-            c.data.get("ticket").then((data) => {
-                c.instance.resize({ height: "500px" });
-                // console.log(data);
-                let doc = new DOMParser().parseFromString(data.ticket.description, "text/html");
-                let latlong = doc.getElementById("loc_latlong").textContent;
-                if (latlong && latlong.length > 0) {
-                    let lat = parseFloat(latlong.split(",")[0]), long = parseFloat(latlong.split(",")[1]);
+      mapboxgl.accessToken =
+        "pk.eyJ1IjoiaGVtY2hhbmRlciIsImEiOiJja2ZvMWNvNTUwaW4wMnhtcXd6NndjZ3p0In0.-Ww7DByjuhaLrjrEiEse6g";
+      app.initialized().then((c) => {
+        c.data.get("ticket").then(
+          (data) => {
+            c.instance.resize({ height: "500px" });
+            // console.log(data);
+            let doc = new DOMParser().parseFromString(
+              data.ticket.description,
+              "text/html"
+            );
+            let latlong = doc.getElementById("loc_latlong").textContent;
+            if (latlong && latlong.length > 0) {
+              let lat = parseFloat(latlong.split(",")[0]),
+                long = parseFloat(latlong.split(",")[1]);
 
-                    let map = new mapboxgl.Map({
-                        container: 'map',
-                        zoom: 10,
-                        center: [long, lat],
-                        style: 'mapbox://styles/hemchander/ckfurlbhg5yf119k2kxwed62s',
-                    });
+              let map = new mapboxgl.Map({
+                container: "map",
+                zoom: 10,
+                center: [long, lat],
+                style: "mapbox://styles/hemchander/ckfurlbhg5yf119k2kxwed62s",
+              });
 
-                    var marker = new mapboxgl.Marker()
-                        .setLngLat([long, lat])
-                        .addTo(map);
+              var marker = new mapboxgl.Marker()
+                .setLngLat([long, lat])
+                .addTo(map);
 
-                    c.request.get(`https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyDQG0Gu8yvSN_C7q52hy1izrpOC7f-TwpA&latlng=${lat},${long}`, {})
-                        .then(
-                            function (data) {
-                                let r = JSON.parse(data.response);
-                                console.info(r);
-                                document.getElementById("address").innerHTML = "📍 " + r.results[0].formatted_address + `<br/><br/>
+              c.request
+                .get(
+                  `https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyDQG0Gu8yvSN_C7q52hy1izrpOC7f-TwpA&latlng=${lat},${long}`,
+                  {}
+                )
+                .then(
+                  function (data) {
+                    let r = JSON.parse(data.response);
+                    console.info(r);
+                    document.getElementById("address").innerHTML =
+                      "📍 " +
+                      r.results[0].formatted_address +
+                      `<br/><br/>
                                 <a href="https://freshfoods.freshpo.com/a/apps/freshfoods-delivery-request-insights?dev=true'" target="_blank">
                                     <fw-button size="small">
                                         View All
@@ -65,38 +85,34 @@
                                 </a>
                                 
                                 `;
-                            },
-                            function (error) {
-                                console.error(error);
-                            }
-                        );
-                    let entity = c.db.entity({ version: 'v1' });
-                    let dr = entity.get("delivery_requests");
-                    dr.getAll()
-                        .then((data) => {
-                            let co_record_set = data.records.map((i) => {
-                                return i.data;
-                            });
-                            let cur_record = co_record_set.filter((i) => {
-                                return i.ticket_id == data.ticket.id
-                            });
-                            // console.log(cur_record);
-                        })
-                }
-            }, (err) => {
-                console.log(err);
-            });
-        });
+                  },
+                  function (error) {
+                    console.error(error);
+                  }
+                );
+              let entity = c.db.entity({ version: "v1" });
+              let dr = entity.get("delivery_requests");
+              dr.getAll().then((data) => {
+                let co_record_set = data.records.map((i) => {
+                  return i.data;
+                });
+                let cur_record = co_record_set.filter((i) => {
+                  return i.ticket_id == data.ticket.id;
+                });
+                // console.log(cur_record);
+              });
+            }
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
+      });
     </script>
-</head>
+  </head>
 
-<body>
-    <div id="map">
-
-    </div>
-    <div id="address">
-
-    </div>
-</body>
-
+  <body>
+    <div id="map"></div>
+    <div id="address"></div>
+  </body>
 </html>

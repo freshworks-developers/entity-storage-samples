@@ -1,613 +1,760 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <title>👨‍🌾 Freshfoods Delivery Request Insights</title>
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <!-- Scripts -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/helper.js"></script>
+    <script src="assets/js/chart.js"></script>
+    <!-- Scripts - Crayons! -->
+    <script
+      type="module"
+      src="https://unpkg.com/@freshworks/crayons/dist/crayons/crayons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/@freshworks/crayons/dist/crayons/crayons.js"
+    ></script>
 
-<head>
-  <meta charset="utf-8" />
-  <title>👨‍🌾 Freshfoods Delivery Request Insights</title>
-  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <!-- Scripts -->
-  <script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
-  <script src="assets/js/data.js"></script>
-  <script src="assets/js/helper.js"></script>
-  <script src="assets/js/chart.js"></script>
-  <!-- Scripts - Crayons! -->
-  <script type="module" src="https://unpkg.com/@freshworks/crayons/dist/crayons/crayons.esm.js">
-  </script>
-  <script nomodule src="https://unpkg.com/@freshworks/crayons/dist/crayons/crayons.js">
-  </script>
+    <!-- Vue -->
+    <script src="https://npmcdn.com/vue/dist/vue.js"></script>
+    <script src="assets/js/controller.js"></script>
 
-  <!-- Vue -->
-  <script src="https://npmcdn.com/vue/dist/vue.js"></script>
-  <script src="assets/js/controller.js"></script>
+    <!-- Bootstrap for layout  -->
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://static.freshcloud.io/fdk/2.0/assets/fresh_client.js"></script>
 
-  <!-- Bootstrap for layout  -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-    integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
-    crossorigin="anonymous"></script>
-  <script src="https://static.freshcloud.io/fdk/2.0/assets/fresh_client.js"></script>
+    <!-- Stylesheets -->
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+      rel="stylesheet"
+    />
+    <link href="assets/css/style.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+  </head>
 
-
-  <!-- Stylesheets -->
-  <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
-  <link href="assets/css/style.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-
-</head>
-
-<body>
-
-  <div class="loader">
-    <div class="spinner">
-      <fw-spinner size="large"></fw-spinner>
+  <body>
+    <div class="loader">
+      <div class="spinner">
+        <fw-spinner size="large"></fw-spinner>
+      </div>
     </div>
-  </div>
-  <div id="app">
-    <fw-toast id="type_toast"></fw-toast>
+    <div id="app">
+      <fw-toast id="type_toast"></fw-toast>
 
-    <!-- Start View  -->
-    <div id="list">
-
-      <div class="container" style="height: 100%;">
-
-        <div class="row m-2">
-          <h4 class="mb-2">{{ st.filter }}</h3>
-        </div>
-        <div class="row mb-4 filter-row">
-          <div class="col-md-4">
-            <fw-select label="Location" id="location_value" value="0" placeholder="Your choice">
-              <fw-select-option value="0">All</fw-select-option>
-              <fw-select-option value="3">Alameda County</fw-select-option>
-              <fw-select-option value="1">Santa Clara County</fw-select-option>
-              <fw-select-option value="2">San Mateo County</fw-select-option>
-              <fw-select-option value="4">Contra Costa County</fw-select-option>
-              <fw-select-option value="5">Marin County</fw-select-option>
-            </fw-select>
+      <!-- Start View  -->
+      <div id="list">
+        <div class="container" style="height: 100%">
+          <div class="row m-2">
+            <h4 class="mb-2">{{ st.filter }}</h4>
           </div>
-          <div class="col-md-4">
-            <fw-select label="Category" id="category" value="0" placeholder="Your choice">
-              <fw-select-option value="0">All</fw-select-option>
-              <fw-select-option value="[F]">Fresh Produce</fw-select-option>
-              <fw-select-option value="[M]">Dairy Products</fw-select-option>
-            </fw-select>
-          </div>
-          <div class="col-md-4">
-            <fw-select label="Order Value" id="order_value" value="0" placeholder="Your choice">
-              <fw-select-option value="0"> All </fw-select-option>
-              <fw-select-option value="1">$100 & below</fw-select-option>
-              <fw-select-option value="2">$101 - $250</fw-select-option>
-              <fw-select-option value="3">$251 - $500</fw-select-option>
-              <fw-select-option value="4">$501 - $750</fw-select-option>
-              <fw-select-option value="5">$751 - $1000</fw-select-option>
-            </fw-select>
-          </div>
-          <!-- <div class="col-md-1">
+          <div class="row mb-4 filter-row">
+            <div class="col-md-4">
+              <fw-select
+                label="Location"
+                id="location_value"
+                value="0"
+                placeholder="Your choice"
+              >
+                <fw-select-option value="0">All</fw-select-option>
+                <fw-select-option value="3">Alameda County</fw-select-option>
+                <fw-select-option value="1"
+                  >Santa Clara County</fw-select-option
+                >
+                <fw-select-option value="2">San Mateo County</fw-select-option>
+                <fw-select-option value="4"
+                  >Contra Costa County</fw-select-option
+                >
+                <fw-select-option value="5">Marin County</fw-select-option>
+              </fw-select>
+            </div>
+            <div class="col-md-4">
+              <fw-select
+                label="Category"
+                id="category"
+                value="0"
+                placeholder="Your choice"
+              >
+                <fw-select-option value="0">All</fw-select-option>
+                <fw-select-option value="[F]">Fresh Produce</fw-select-option>
+                <fw-select-option value="[M]">Dairy Products</fw-select-option>
+              </fw-select>
+            </div>
+            <div class="col-md-4">
+              <fw-select
+                label="Order Value"
+                id="order_value"
+                value="0"
+                placeholder="Your choice"
+              >
+                <fw-select-option value="0"> All </fw-select-option>
+                <fw-select-option value="1">$100 & below</fw-select-option>
+                <fw-select-option value="2">$101 - $250</fw-select-option>
+                <fw-select-option value="3">$251 - $500</fw-select-option>
+                <fw-select-option value="4">$501 - $750</fw-select-option>
+                <fw-select-option value="5">$751 - $1000</fw-select-option>
+              </fw-select>
+            </div>
+            <!-- <div class="col-md-1">
                         <fw-button size="icon" class="go-button" v-on:click="filter">
                             <fw-icon name="arrow-right" color="white"></fw-icon>
                         </fw-button>
                     </div> -->
-        </div>
-        <div class="row mb-4 filter-row">
-          <div class="col-md-4">
-            <fw-select label="Status" id="req_status" value="0" placeholder="Your choice">
-              <fw-select-option value="0">All</fw-select-option>
-              <fw-select-option value="1">Open</fw-select-option>
-              <fw-select-option value="2">Awaiting Review</fw-select-option>
-              <fw-select-option value="3">Closed</fw-select-option>
-            </fw-select>
           </div>
-          <div class="col-md-4">
-            <fw-select label="Created" id="created_on" value="0" placeholder="Your choice">
-              <fw-select-option value="0">All</fw-select-option>
-              <fw-select-option value="1">Last week</fw-select-option>
-              <fw-select-option value="2">Last month</fw-select-option>
-              <fw-select-option value="3">Last quarter</fw-select-option>
-            </fw-select>
-          </div>
-
-          <div class="col-md-2">
-            <fw-button size="normal" class="go-button" v-on:click="filter">
-              Apply <fw-icon name="filter" color="white"></fw-icon>
-            </fw-button>
-          </div>
-          <div class="col-md-2">
-            <fw-input label="Zipcode" class="d-none" icon-left="location" placeholder="Enter the Zipcode" id="pincode"
-              clear-input>
-            </fw-input>
-          </div>
-        </div>
-
-        <div class="row m-2">
-          <h4 class="mb-2">{{ st.title }}</h3>
-        </div>
-        <div class="row m-2" v-bind:class="no_result">
-          <img src="assets/img/404.gif" />
-        </div>
-        <div v-bind:class="'row m-2 requests ' + list_no_result">
-          <!-- <h6 class="mb-2"> ... </h6> -->
-          <div class="card w-100 mb-2 req-list-item" v-for="r in delivery_req_list">
-            <div class="card-body">
-              <div class="photo">
-                <img
-                  v-bind:src="'https://avatar.oxro.io/avatar.svg?name='+ r.contact_name +'.svg&fontSize=120&bold=true'"
-                  width=70px height=70px alt="..." class="rounded">
-
-              </div>
-              <div class="main">
-
-                <h6 class="card-title hand-pointer" v-bind:data-context="JSON.stringify(r)" v-on:click="gotodetail">
-                  Delivery request for
-                  {{ r.category== "[M]" ? "Milk":"Fruits" }} from
-                  {{r.loc_locality}}</h6>
-                <!-- <p class="card-text">This is another card with title and supporting text below. This card has
-                            some additional content to make it slightly taller overall.</p> -->
-                <p class="card-text"><small class="text">{{r.contact_name}}</small> • <small
-                    class="text-muted hand-pointer" v-bind:data-lat="r.loc_lat" v-bind:data-lng="r.loc_long"
-                    v-on:click="takemethere">
-
-                    {{r.loc_area2}}</small> • <small class="text-muted">
-                    <fw-icon class="hand-pointer" name="location" size="14" color="#9a9a9a" v-bind:data-lat="r.loc_lat"
-                      v-bind:data-lng="r.loc_long" v-on:click="takemethere">
-                    </fw-icon>
-                  </small> •
-                  <fw-label v-bind:value="`$ ` + r.cart_value" color="green"></fw-label> •
-                  <fw-label v-bind:value="`Ticket #` + r.ticket_id"></fw-label>
-                </p>
-              </div>
+          <div class="row mb-4 filter-row">
+            <div class="col-md-4">
+              <fw-select
+                label="Status"
+                id="req_status"
+                value="0"
+                placeholder="Your choice"
+              >
+                <fw-select-option value="0">All</fw-select-option>
+                <fw-select-option value="1">Open</fw-select-option>
+                <fw-select-option value="2">Awaiting Review</fw-select-option>
+                <fw-select-option value="3">Closed</fw-select-option>
+              </fw-select>
+            </div>
+            <div class="col-md-4">
+              <fw-select
+                label="Created"
+                id="created_on"
+                value="0"
+                placeholder="Your choice"
+              >
+                <fw-select-option value="0">All</fw-select-option>
+                <fw-select-option value="1">Last week</fw-select-option>
+                <fw-select-option value="2">Last month</fw-select-option>
+                <fw-select-option value="3">Last quarter</fw-select-option>
+              </fw-select>
             </div>
 
+            <div class="col-md-2">
+              <fw-button size="normal" class="go-button" v-on:click="filter">
+                Apply <fw-icon name="filter" color="white"></fw-icon>
+              </fw-button>
+            </div>
+            <div class="col-md-2">
+              <fw-input
+                label="Zipcode"
+                class="d-none"
+                icon-left="location"
+                placeholder="Enter the Zipcode"
+                id="pincode"
+                clear-input
+              >
+              </fw-input>
+            </div>
+          </div>
+
+          <div class="row m-2">
+            <h4 class="mb-2">{{ st.title }}</h4>
+          </div>
+          <div class="row m-2" v-bind:class="no_result">
+            <img src="assets/img/404.gif" />
+          </div>
+          <div v-bind:class="'row m-2 requests ' + list_no_result">
+            <!-- <h6 class="mb-2"> ... </h6> -->
+            <div
+              class="card w-100 mb-2 req-list-item"
+              v-for="r in delivery_req_list"
+            >
+              <div class="card-body">
+                <div class="photo">
+                  <img
+                    v-bind:src="'https://avatar.oxro.io/avatar.svg?name='+ r.contact_name +'.svg&fontSize=120&bold=true'"
+                    width="70px"
+                    height="70px"
+                    alt="..."
+                    class="rounded"
+                  />
+                </div>
+                <div class="main">
+                  <h6
+                    class="card-title hand-pointer"
+                    v-bind:data-context="JSON.stringify(r)"
+                    v-on:click="gotodetail"
+                  >
+                    Delivery request for {{ r.category== "[M]" ? "Milk":"Fruits"
+                    }} from {{r.loc_locality}}
+                  </h6>
+                  <!-- <p class="card-text">This is another card with title and supporting text below. This card has
+                            some additional content to make it slightly taller overall.</p> -->
+                  <p class="card-text">
+                    <small class="text">{{r.contact_name}}</small> •
+                    <small
+                      class="text-muted hand-pointer"
+                      v-bind:data-lat="r.loc_lat"
+                      v-bind:data-lng="r.loc_long"
+                      v-on:click="takemethere"
+                    >
+                      {{r.loc_area2}}</small
+                    >
+                    •
+                    <small class="text-muted">
+                      <fw-icon
+                        class="hand-pointer"
+                        name="location"
+                        size="14"
+                        color="#9a9a9a"
+                        v-bind:data-lat="r.loc_lat"
+                        v-bind:data-lng="r.loc_long"
+                        v-on:click="takemethere"
+                      >
+                      </fw-icon>
+                    </small>
+                    •
+                    <fw-label
+                      v-bind:value="`$ ` + r.cart_value"
+                      color="green"
+                    ></fw-label>
+                    •
+                    <fw-label
+                      v-bind:value="`Ticket #` + r.ticket_id"
+                    ></fw-label>
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div id="detail-list">
-      <div class="container" style="height: 90%;">
-        <div class="row m-2 mt-2">
-          <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item hand-pointer"><a href="#" v-on:click="gotolist">
-                  <fw-button size="icon" color="secondary" v-on:click="gotolist">
-                    <fw-icon name="arrow-left"></fw-icon>
-                  </fw-button>
-
-                </a>
-              </li>
-              <!-- <li class="breadcrumb-item active hand-pointer" aria-current="page" v-on:click="gotolist">
+      <div id="detail-list">
+        <div class="container" style="height: 90%">
+          <div class="row m-2 mt-2">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item hand-pointer">
+                  <a href="#" v-on:click="gotolist">
+                    <fw-button
+                      size="icon"
+                      color="secondary"
+                      v-on:click="gotolist"
+                    >
+                      <fw-icon name="arrow-left"></fw-icon>
+                    </fw-button>
+                  </a>
+                </li>
+                <!-- <li class="breadcrumb-item active hand-pointer" aria-current="page" v-on:click="gotolist">
                                 Ticket : {{ active_item.ticket_id }}</li> -->
-            </ol>
-          </nav>
-        </div>
-        <div class="row m-2">
-          <div class="card w-100 mb-2 req-list-item detailed-item">
-            <div class="card-body">
-              <div class="photo">
-                <img
-                  v-bind:src="'https://avatar.oxro.io/avatar.svg?name='+ active_item.contact_name +'.svg&fontSize=120&bold=true'"
-                  width=160px height=160px alt="..." class="rounded">
-
-              </div>
-              <div class="main">
-
-                <h6 class="card-title hand-pointer" v-on:click="gotodetail">Delivery request for
-                  {{ active_item.category == "[M]" ? "Milk":"Fruits" }} from
-                  {{ active_item.loc_locality}}</h6>
-                <!-- <p class="card-text">This is another card with title and supporting text below. This card has
+              </ol>
+            </nav>
+          </div>
+          <div class="row m-2">
+            <div class="card w-100 mb-2 req-list-item detailed-item">
+              <div class="card-body">
+                <div class="photo">
+                  <img
+                    v-bind:src="'https://avatar.oxro.io/avatar.svg?name='+ active_item.contact_name +'.svg&fontSize=120&bold=true'"
+                    width="160px"
+                    height="160px"
+                    alt="..."
+                    class="rounded"
+                  />
+                </div>
+                <div class="main">
+                  <h6 class="card-title hand-pointer" v-on:click="gotodetail">
+                    Delivery request for {{ active_item.category == "[M]" ?
+                    "Milk":"Fruits" }} from {{ active_item.loc_locality}}
+                  </h6>
+                  <!-- <p class="card-text">This is another card with title and supporting text below. This card has
                             some additional content to make it slightly taller overall.</p> -->
-                <p class="card-text"><small class="text">{{active_item.contact_name}}</small> • <small
-                    class="text-muted hand-pointer" v-bind:data-lat="active_item.loc_lat"
-                    v-bind:data-lng="active_item.loc_long" v-on:click="takemethere">
+                  <p class="card-text">
+                    <small class="text">{{active_item.contact_name}}</small> •
+                    <small
+                      class="text-muted hand-pointer"
+                      v-bind:data-lat="active_item.loc_lat"
+                      v-bind:data-lng="active_item.loc_long"
+                      v-on:click="takemethere"
+                    >
+                      {{active_item.loc_area2}}</small
+                    >
+                    •
+                    <small class="text-muted">
+                      <fw-icon
+                        class="hand-pointer"
+                        name="location"
+                        size="14"
+                        color="#9a9a9a"
+                        v-bind:data-lat="active_item.loc_lat"
+                        v-bind:data-lng="active_item.loc_long"
+                        v-on:click="takemethere"
+                      >
+                      </fw-icon>
+                    </small>
+                  </p>
+                  <fw-label
+                    v-bind:value="`Ticket #` + active_item.ticket_id"
+                  ></fw-label>
 
-                    {{active_item.loc_area2}}</small> • <small class="text-muted">
-                    <fw-icon class="hand-pointer" name="location" size="14" color="#9a9a9a"
-                      v-bind:data-lat="active_item.loc_lat" v-bind:data-lng="active_item.loc_long"
-                      v-on:click="takemethere">
-                    </fw-icon>
-                  </small>
-                </p>
-                <fw-label v-bind:value="`Ticket #` + active_item.ticket_id"></fw-label>
-
-                <div class="card-body" style="margin-left: -20px;">
-                  <fw-button color="primary"> Approve </fw-button>
-                  <fw-button color="secondary"> Cancel </fw-button>
+                  <div class="card-body" style="margin-left: -20px">
+                    <fw-button color="primary"> Approve </fw-button>
+                    <fw-button color="secondary"> Cancel </fw-button>
+                  </div>
                 </div>
               </div>
             </div>
 
+            <hr />
           </div>
 
-          <hr>
-          </hr>
+          <div class="row m-2">
+            <div class="card w-100 mb-2">
+              <div class="card-body">
+                <h6>Subscription</h6>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <b>
+                      {{ active_item.category == "[M]" ? "Milk & Dairy
+                      products":"Fresh produce (Fruits)" }}
+                    </b>
+                    <br />
+                    {{active_item.items}}
+                  </div>
 
-
-        </div>
-
-        <div class="row m-2">
-          <div class="card w-100 mb-2">
-            <div class="card-body">
-              <h6>Subscription</h6>
-              <div class="row">
-                <div class="col-sm-6">
-
-                  <b> {{ active_item.category == "[M]" ? "Milk & Dairy products":"Fresh produce (Fruits)" }}
-                  </b>
-                  <br />
-                  {{active_item.items}}
-                </div>
-
-                <div class="col-sm-3">
-
-                </div>
-                <div class="col-sm-3">
-                  <h6> {{ '$ ' + active_item.cart_value }} <small> / month </small> </h6>
+                  <div class="col-sm-3"></div>
+                  <div class="col-sm-3">
+                    <h6>
+                      {{ '$ ' + active_item.cart_value }}
+                      <small> / month </small>
+                    </h6>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <!-- <div class="row m-2">
+          <!-- <div class="row m-2">
                     <h6>Delivery centers nearby </h6>
                     {{ active_item.near_del_cen }}
 
                 </div> -->
-        <div class="row m-2">
-          <h6>Requests near {{ active_item.loc_area2 }}</h6>
-        </div>
+          <div class="row m-2">
+            <h6>Requests near {{ active_item.loc_area2 }}</h6>
+          </div>
 
-        <div class="row m-2 requests">
-          <div class="card w-100 mb-2 req-list-item" v-for="r in nearby_req_list">
-            <div class="card-body">
-              <div class="photo">
-                <img
-                  v-bind:src="'https://avatar.oxro.io/avatar.svg?name='+ r.contact_name +'.svg&fontSize=120&bold=true'"
-                  width=70px height=70px alt="..." class="rounded">
-
-              </div>
-              <div class="main">
-
-                <h6 class="card-title hand-pointer" v-on:click="gotodetail" v-bind:data-context="JSON.stringify(r)">
-                  Delivery request for
-                  {{ r.category== "[M]" ? "Milk":"Fruits" }} from
-                  {{r.loc_locality}}</h6>
-                <!-- <p class="card-text">This is another card with title and supporting text below. This card has
+          <div class="row m-2 requests">
+            <div
+              class="card w-100 mb-2 req-list-item"
+              v-for="r in nearby_req_list"
+            >
+              <div class="card-body">
+                <div class="photo">
+                  <img
+                    v-bind:src="'https://avatar.oxro.io/avatar.svg?name='+ r.contact_name +'.svg&fontSize=120&bold=true'"
+                    width="70px"
+                    height="70px"
+                    alt="..."
+                    class="rounded"
+                  />
+                </div>
+                <div class="main">
+                  <h6
+                    class="card-title hand-pointer"
+                    v-on:click="gotodetail"
+                    v-bind:data-context="JSON.stringify(r)"
+                  >
+                    Delivery request for {{ r.category== "[M]" ? "Milk":"Fruits"
+                    }} from {{r.loc_locality}}
+                  </h6>
+                  <!-- <p class="card-text">This is another card with title and supporting text below. This card has
                             some additional content to make it slightly taller overall.</p> -->
-                <p class="card-text"><small class="text">{{r.contact_name}}</small> • <small
-                    class="text-muted hand-pointer" v-bind:data-lat="r.loc_lat" v-bind:data-lng="r.loc_long"
-                    v-on:click="takemethere">
-
-                    {{r.loc_area2}}</small> • <small class="text-muted">
-                    <fw-icon class="hand-pointer" name="location" size="14" color="#9a9a9a" v-bind:data-lat="r.loc_lat"
-                      v-bind:data-lng="r.loc_long" v-on:click="takemethere">
-                    </fw-icon>
-                  </small> •
-                  <fw-label v-bind:value="`$ ` + r.cart_value" color="green"></fw-label>
-                </p>
+                  <p class="card-text">
+                    <small class="text">{{r.contact_name}}</small> •
+                    <small
+                      class="text-muted hand-pointer"
+                      v-bind:data-lat="r.loc_lat"
+                      v-bind:data-lng="r.loc_long"
+                      v-on:click="takemethere"
+                    >
+                      {{r.loc_area2}}</small
+                    >
+                    •
+                    <small class="text-muted">
+                      <fw-icon
+                        class="hand-pointer"
+                        name="location"
+                        size="14"
+                        color="#9a9a9a"
+                        v-bind:data-lat="r.loc_lat"
+                        v-bind:data-lng="r.loc_long"
+                        v-on:click="takemethere"
+                      >
+                      </fw-icon>
+                    </small>
+                    •
+                    <fw-label
+                      v-bind:value="`$ ` + r.cart_value"
+                      color="green"
+                    ></fw-label>
+                  </p>
+                </div>
               </div>
             </div>
-
           </div>
         </div>
-
       </div>
     </div>
-  </div>
-  <div id="map">
-
-  </div>
-  <div id="tile-x">
-    <div class="card" style="width: 10rem;">
-      <div class="card-body">
-        <h3 class="card-title" id="tile-x-number">-</h3>
-        <h6 class="card-subtitle mb-2 text-muted">📩 Requests</h6>
+    <div id="map"></div>
+    <div id="tile-x">
+      <div class="card" style="width: 10rem">
+        <div class="card-body">
+          <h3 class="card-title" id="tile-x-number">-</h3>
+          <h6 class="card-subtitle mb-2 text-muted">📩 Requests</h6>
+        </div>
       </div>
     </div>
-  </div>
-  <div id="tile-y">
-    <div class="card" style="width: 13rem;">
-      <div class="card-body">
-        <h3 class="card-title" id="tile-y-number">
-        </h3>
-        <h6 class="card-subtitle mb-2 text-muted">💵 Value</h6>
+    <div id="tile-y">
+      <div class="card" style="width: 13rem">
+        <div class="card-body">
+          <h3 class="card-title" id="tile-y-number"></h3>
+          <h6 class="card-subtitle mb-2 text-muted">💵 Value</h6>
+        </div>
       </div>
     </div>
-  </div>
-  <div id="planner">🎪 | <fw-toggle size="small" id="plannerm"></fw-toggle>
-  </div>
-  <div id="infopnl">
-    <span id="opicon" style="color:black">ℹ</span>
-    <div id="lginfo">
-      <h6 class="card-subtitle text-muted" style="text-align: left; margin-left: 32px;">Info</h6>
-      <div class="colrow"><span class="colorbox milkcolor" />
-        <div class="coltext">Dairy Products</div>
-      </div>
-      <br />
-      <div class="colrow"><span class="colorbox fruitcolor" />
-        <div class="coltext">Fresh Produce</div>
-      </div>
-      <br>
+    <div id="planner">
+      🎪 | <fw-toggle size="small" id="plannerm"></fw-toggle>
     </div>
-  </div>
-  <div id="tile-z">
-    <div class="card" style="width: 10rem;">
-      <div class="card-body">
-
-        <h6 class="card-subtitle mb-2 text-muted">📐 Planner</h6>
-        <small class="text-muted"> 🛵 <span id="covkm"></span></small> <input type="range" min="1" max="100" value="10"
-          class="slider" oninput="$('#covkm').text( parseInt(parseInt(this.value) * 20/100) + ' mi')" id="myRange">
-
+    <div id="infopnl">
+      <span id="opicon" style="color: black">ℹ</span>
+      <div id="lginfo">
+        <h6
+          class="card-subtitle text-muted"
+          style="text-align: left; margin-left: 32px"
+        >
+          Info
+        </h6>
+        <div class="colrow">
+          <span class="colorbox milkcolor" />
+          <div class="coltext">Dairy Products</div>
+        </div>
+        <br />
+        <div class="colrow">
+          <span class="colorbox fruitcolor" />
+          <div class="coltext">Fresh Produce</div>
+        </div>
+        <br />
       </div>
     </div>
-  </div>
-  <div id="planning-mode">
-
-  </div>
-  <!-- <div class="loading-screen">
+    <div id="tile-z">
+      <div class="card" style="width: 10rem">
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2 text-muted">📐 Planner</h6>
+          <small class="text-muted"> 🛵 <span id="covkm"></span></small>
+          <input
+            type="range"
+            min="1"
+            max="100"
+            value="10"
+            class="slider"
+            oninput="$('#covkm').text( parseInt(parseInt(this.value) * 20/100) + ' mi')"
+            id="myRange"
+          />
+        </div>
+      </div>
+    </div>
+    <div id="planning-mode"></div>
+    <!-- <div class="loading-screen">
         <fw-spinner size="large" color="green"></fw-spinner>
     </div> -->
 
-  <!-- End View -->
-  <script>
-
-
-
-  </script>
-  <script>
-    Vue.config.silent = true;
-    d_app = new Vue({
-      el: '#app',
-      mounted() {
-        this.init();
-      },
-      data: {
-        st: {
-          filter: 'Filters',
-          title: 'Requests'
+    <!-- End View -->
+    <script></script>
+    <script>
+      Vue.config.silent = true;
+      d_app = new Vue({
+        el: "#app",
+        mounted() {
+          this.init();
         },
-        no_result: "found",
-        list_no_result: "not_found",
-        delivery_req_list: mockData,
-        nearby_req_list: mockData,
-        active_item: {
-          "contact_id": "rose@example.com",
-          "contact_name": "Rose Mary",
-          "ticket_id": 11,
-          "loc_lat": 37.2883,
-          "loc_long": -121.9485,
-          "loc_zipcode": 95008,
-          "loc_locality": "Campbell",
-          "loc_area2": "Santa Clara County",
-          "loc_area1": "California",
-          "loc_country": "United States",
-          "cart_value": 400,
-          "near_del_cen": "{}",
-          "category": "[M]",
-          "status": "0",
-          "cart_value_bucket": 3,
-          "items": ""
-        }
-      },
-      watch: {
-        delivery_req_list: function (val, oldVal) {
-          // console.log("Gotta update the map?");
-          changeData(map, mapTransform(val));
-          // End of change
-        }
-      },
-      methods: {
-        init() {
-          // Mapbox Access Token
-          mapboxgl.accessToken = 'pk.eyJ1IjoiaGVtY2hhbmRlciIsImEiOiJja2ZvMWNvNTUwaW4wMnhtcXd6NndjZ3p0In0.-Ww7DByjuhaLrjrEiEse6g';
-          // Get the map!
-          map = initMap();
-          // Load the icons
-          addIcons(map);
-          // Filters for classifying delivery requests into 2 categories based on the item category
-          var fruit = ['in', '[F]', ['get', 'category']];
-          var milk = ['in', '[M]', ['get', 'category']];
-          // Colors to use for the categories
-          var filter = { fruit, milk };
-          app.initialized()
-            .then((c) => {
-              let entity = c.db.entity({ version: 'v1' });
-              let dr = entity.get("delivery_requests");
-              dr.getAll()
-                .then((data) => {
-                  document.getElementsByClassName("loader")[0].style.display = "none";
-                  console.info("Custom Objects Loaded");
-                  let co_record_set = data.records.map((i) => {
-                    return i.data;
+        data: {
+          st: {
+            filter: "Filters",
+            title: "Requests",
+          },
+          no_result: "found",
+          list_no_result: "not_found",
+          delivery_req_list: mockData,
+          nearby_req_list: mockData,
+          active_item: {
+            contact_id: "rose@example.com",
+            contact_name: "Rose Mary",
+            ticket_id: 11,
+            loc_lat: 37.2883,
+            loc_long: -121.9485,
+            loc_zipcode: 95008,
+            loc_locality: "Campbell",
+            loc_area2: "Santa Clara County",
+            loc_area1: "California",
+            loc_country: "United States",
+            cart_value: 400,
+            near_del_cen: "{}",
+            category: "[M]",
+            status: "0",
+            cart_value_bucket: 3,
+            items: "",
+          },
+        },
+        watch: {
+          delivery_req_list: function (val, oldVal) {
+            // console.log("Gotta update the map?");
+            changeData(map, mapTransform(val));
+            // End of change
+          },
+        },
+        methods: {
+          init() {
+            // Mapbox Access Token
+            mapboxgl.accessToken =
+              "pk.eyJ1IjoiaGVtY2hhbmRlciIsImEiOiJja2ZvMWNvNTUwaW4wMnhtcXd6NndjZ3p0In0.-Ww7DByjuhaLrjrEiEse6g";
+            // Get the map!
+            map = initMap();
+            // Load the icons
+            addIcons(map);
+            // Filters for classifying delivery requests into 2 categories based on the item category
+            var fruit = ["in", "[F]", ["get", "category"]];
+            var milk = ["in", "[M]", ["get", "category"]];
+            // Colors to use for the categories
+            var filter = { fruit, milk };
+            app
+              .initialized()
+              .then((c) => {
+                let entity = c.db.entity({ version: "v1" });
+                let dr = entity.get("delivery_requests");
+                dr.getAll()
+                  .then((data) => {
+                    document.getElementsByClassName("loader")[0].style.display =
+                      "none";
+                    console.info("Custom Objects Loaded");
+                    let co_record_set = data.records.map((i) => {
+                      return i.data;
+                    });
+                    console.info(co_record_set);
+                    changeData(map, mapTransform(co_record_set));
+                    this.delivery_req_list = co_record_set;
+                    mockData = co_record_set;
                   })
-                  console.info(co_record_set);
-                  changeData(map, mapTransform(co_record_set));
-                  this.delivery_req_list = co_record_set;
-                  mockData = co_record_set;
-                })
-                .catch((err) => {
-                  console.error(err);
-                  document.getElementsByClassName("loader")[0].style.display = "none";
-                })
-            })
-            .catch((err) => {
-              console.error(err);
-              document.getElementsByClassName("loader")[0].style.display = "none";
-            });
-          map.on('load', function () {
-            // add a clustered GeoJSON source for a sample set of delivery requests
-            map.addSource('delivery_requests', {
-              'type': 'geojson',
-              'data':
-                mapTransform(mockData),
-              'cluster': true,
-              'clusterRadius': 80,
-              'clusterProperties': {
-                // keep separate counts for each item category in a cluster
-                'fruit': ['+', ['case', fruit, 1, 0]],
-                'milk': ['+', ['case', milk, 1, 0]]
-              }
-            });
-            map.addSource("delivery-centers", {
-              "type": "geojson",
-              "data": {
-                "type": "FeatureCollection",
-                "features": [
-                  createGeoJSONCircle([-122.331298, 37.564457], 15),
-                  createGeoJSONCircle([-122.130387, 37.420972], 9),
-                  createGeoJSONCircle([-122.036744, 37.320918], 5)
-                ]
-              }
-            });
-            //Pin the hub labels
-            [
-              { loc: [-122.331298, 37.564457], name: "🎪 San Mateo Central Hub" },
-              { loc: [-122.130387, 37.420972], name: "🎪 Palo Alto Hub" },
-              { loc: [-122.036744, 37.320918], name: "🎪 Cupertino Hub" }
-            ]
-              .map((i) => {
+                  .catch((err) => {
+                    console.error(err);
+                    document.getElementsByClassName("loader")[0].style.display =
+                      "none";
+                  });
+              })
+              .catch((err) => {
+                console.error(err);
+                document.getElementsByClassName("loader")[0].style.display =
+                  "none";
+              });
+            map.on("load", function () {
+              // add a clustered GeoJSON source for a sample set of delivery requests
+              map.addSource("delivery_requests", {
+                type: "geojson",
+                data: mapTransform(mockData),
+                cluster: true,
+                clusterRadius: 80,
+                clusterProperties: {
+                  // keep separate counts for each item category in a cluster
+                  fruit: ["+", ["case", fruit, 1, 0]],
+                  milk: ["+", ["case", milk, 1, 0]],
+                },
+              });
+              map.addSource("delivery-centers", {
+                type: "geojson",
+                data: {
+                  type: "FeatureCollection",
+                  features: [
+                    createGeoJSONCircle([-122.331298, 37.564457], 15),
+                    createGeoJSONCircle([-122.130387, 37.420972], 9),
+                    createGeoJSONCircle([-122.036744, 37.320918], 5),
+                  ],
+                },
+              });
+              //Pin the hub labels
+              [
+                {
+                  loc: [-122.331298, 37.564457],
+                  name: "🎪 San Mateo Central Hub",
+                },
+                { loc: [-122.130387, 37.420972], name: "🎪 Palo Alto Hub" },
+                { loc: [-122.036744, 37.320918], name: "🎪 Cupertino Hub" },
+              ].map((i) => {
                 createDelSpots(i.loc, i.name);
               });
 
-            map.addSource("planning-ds", {
-              "type": "geojson",
-              "data": {
-                "type": "FeatureCollection",
-                "features": [
-                  createGeoJSONCircle([-122.331298, 37.564457], 0),
-                ]
-              }
+              map.addSource("planning-ds", {
+                type: "geojson",
+                data: {
+                  type: "FeatureCollection",
+                  features: [createGeoJSONCircle([-122.331298, 37.564457], 0)],
+                },
+              });
+              // circle and symbol layers for rendering individual delivery requests (unclustered points)
+              // map.on('styledata', function () {
+              addLayers(map, filter, colors);
+              // });
+              // after the GeoJSON data is loaded, update markers on the screen and do so on every map move/moveend
+              registerEvents(map);
             });
-            // circle and symbol layers for rendering individual delivery requests (unclustered points)
-            // map.on('styledata', function () {
-            addLayers(map, filter, colors);
-            // });
-            // after the GeoJSON data is loaded, update markers on the screen and do so on every map move/moveend
-            registerEvents(map);
-          });
-        },
-        gotodetail: function (e) {
-          context = e.target.dataset.context;
-          this.active_item = JSON.parse(context);
-          this.nearby_req_list = mockData.filter((req) => { return this.active_item.loc_area2 == req.loc_area2; });
-          map.flyTo({
-            zoom: 20,
-            center: [
-              this.active_item.loc_long,
-              this.active_item.loc_lat
-            ],
-            essential: true // this animation is considered essential with respect to prefers-reduced-motion
-          });
-          document.getElementById("list").style.display = "none";
-          document.getElementById("detail-list").style.display = "block";
-        },
-        gotolist: function (e) {
-          document.getElementById("list").style.display = "block";
-          document.getElementById("detail-list").style.display = "none";
-          map.flyTo({
-            zoom: 9
-          });
-        },
-        takemethere: function (e) {
-          // console.log(e.target.dataset.lat);
-          map.flyTo({
-            zoom: 20,
-            center: [
-              e.target.dataset.lng,
-              e.target.dataset.lat
-            ],
-            essential: true // this animation is considered essential with respect to prefers-reduced-motion
-          });
-        },
-        filter: function (e) {
-          pin = document.getElementById("pincode");
-          cat = document.getElementById("category");
-          ov = document.getElementById("order_value");
-          lv = document.getElementById("location_value");
-          rs = document.getElementById("req_status");
-
-          lv.getSelectedItem().then((i) => {
-            let opt = i[0].text;
-            nD = "";
-            // console.log(pin.value);
-            if (pin.value.length < 1 && ov.value == "0" && cat.value == "0" && lv.value == "0" && rs.value == "0") {
-              nD = mockData
-            } else {
-              var f1 = mockData.filter((req) => { return pin.value.length < 1 ? true : (req.loc_zipcode == pin.value) });
-              var f2 = f1.filter((req) => { return ov.value == 0 ? true : (req.cart_value_bucket == ov.value) });
-              var f3 = f2.filter((req) => { return cat.value == 0 ? true : (req.category == cat.value) });
-              var f4 = f3.filter((req) => { return lv.value == 0 ? true : (req.loc_area2 == opt) });
-              // var f5 = f4.filter((req) => { return rs.value == 0 ? true : (req.category == cat.value) });
-
-              nD = f4;
-            }
-
-            this.no_result = nD.length < 1 ? "not-found" : "found";
-            this.list_no_result = !(nD.length < 1) ? "not-found" : "found";
-
-            this.delivery_req_list = nD;
+          },
+          gotodetail: function (e) {
+            context = e.target.dataset.context;
+            this.active_item = JSON.parse(context);
+            this.nearby_req_list = mockData.filter((req) => {
+              return this.active_item.loc_area2 == req.loc_area2;
+            });
             map.flyTo({
-              zoom: 9
+              zoom: 20,
+              center: [this.active_item.loc_long, this.active_item.loc_lat],
+              essential: true, // this animation is considered essential with respect to prefers-reduced-motion
             });
-          });
+            document.getElementById("list").style.display = "none";
+            document.getElementById("detail-list").style.display = "block";
+          },
+          gotolist: function (e) {
+            document.getElementById("list").style.display = "block";
+            document.getElementById("detail-list").style.display = "none";
+            map.flyTo({
+              zoom: 9,
+            });
+          },
+          takemethere: function (e) {
+            // console.log(e.target.dataset.lat);
+            map.flyTo({
+              zoom: 20,
+              center: [e.target.dataset.lng, e.target.dataset.lat],
+              essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+            });
+          },
+          filter: function (e) {
+            pin = document.getElementById("pincode");
+            cat = document.getElementById("category");
+            ov = document.getElementById("order_value");
+            lv = document.getElementById("location_value");
+            rs = document.getElementById("req_status");
 
+            lv.getSelectedItem().then((i) => {
+              let opt = i[0].text;
+              nD = "";
+              // console.log(pin.value);
+              if (
+                pin.value.length < 1 &&
+                ov.value == "0" &&
+                cat.value == "0" &&
+                lv.value == "0" &&
+                rs.value == "0"
+              ) {
+                nD = mockData;
+              } else {
+                var f1 = mockData.filter((req) => {
+                  return pin.value.length < 1
+                    ? true
+                    : req.loc_zipcode == pin.value;
+                });
+                var f2 = f1.filter((req) => {
+                  return ov.value == 0
+                    ? true
+                    : req.cart_value_bucket == ov.value;
+                });
+                var f3 = f2.filter((req) => {
+                  return cat.value == 0 ? true : req.category == cat.value;
+                });
+                var f4 = f3.filter((req) => {
+                  return lv.value == 0 ? true : req.loc_area2 == opt;
+                });
+                // var f5 = f4.filter((req) => { return rs.value == 0 ? true : (req.category == cat.value) });
 
+                nD = f4;
+              }
+
+              this.no_result = nD.length < 1 ? "not-found" : "found";
+              this.list_no_result = !(nD.length < 1) ? "not-found" : "found";
+
+              this.delivery_req_list = nD;
+              map.flyTo({
+                zoom: 9,
+              });
+            });
+          },
+          getDat: function () {
+            return this.delivery_req_list;
+          },
         },
-        getDat: function () {
-          return this.delivery_req_list;
-        }
+      });
+      $("body").on("mouseenter", "#infopnl", function () {
+        // console.log("Mouse In");
+        $("#infopnl").addClass("expandlegend");
+        $("#opicon").hide();
+        setTimeout(() => {
+          $("#lginfo").show();
+          $(".del-hub").show();
+        }, 200);
 
-      }
-    })
-    $("body").on('mouseenter', '#infopnl', function () {
-      // console.log("Mouse In");
-      $('#infopnl').addClass("expandlegend");
-      $("#opicon").hide();
-      setTimeout(() => {
-        $("#lginfo").show();
-        $(".del-hub").show();
-      }, 200);
-
-      setTimeout(() => {
+        setTimeout(() => {
+          $("#lginfo").hide();
+          $(".del-hub").hide();
+          setTimeout(() => {
+            $("#opicon").show();
+          }, 150);
+          $("#infopnl").removeClass("expandlegend");
+        }, 2000);
+      });
+      $("body").on("mouseleave", "#infopnl", function () {
+        // console.log("Mouse out");
         $("#lginfo").hide();
         $(".del-hub").hide();
         setTimeout(() => {
           $("#opicon").show();
         }, 150);
-        $('#infopnl').removeClass("expandlegend");
-      }, 2000);
-    });
-    $("body").on('mouseleave', '#infopnl', function () {
-      // console.log("Mouse out");
-      $("#lginfo").hide();
-      $(".del-hub").hide();
-      setTimeout(() => {
-        $("#opicon").show();
-      }, 150);
-      $('#infopnl').removeClass("expandlegend");
-    });
+        $("#infopnl").removeClass("expandlegend");
+      });
 
-    $('fw-toggle').on('fwChange', (e) => {
-      planningMode = e.target.checked;
-      if (planningMode) {
-        planDecided = false;
-        document.getElementById("tile-z").style.display = "block";
-        document.getElementById("tile-x").style.display = "none";
-        document.getElementById("tile-y").style.display = "none";
-      } else {
-        if (!planDecided) {
-          map.getSource("planning-ds").setData(createGeoJSONCircle([0, 0], 0));
+      $("fw-toggle").on("fwChange", (e) => {
+        planningMode = e.target.checked;
+        if (planningMode) {
+          planDecided = false;
+          document.getElementById("tile-z").style.display = "block";
+          document.getElementById("tile-x").style.display = "none";
+          document.getElementById("tile-y").style.display = "none";
+        } else {
+          if (!planDecided) {
+            map
+              .getSource("planning-ds")
+              .setData(createGeoJSONCircle([0, 0], 0));
+          }
+          document.getElementById("tile-z").style.display = "none";
+          document.getElementById("tile-x").style.display = "block";
+          document.getElementById("tile-y").style.display = "block";
         }
-        document.getElementById("tile-z").style.display = "none";
-        document.getElementById("tile-x").style.display = "block";
-        document.getElementById("tile-y").style.display = "block";
-      }
-    })
-  </script>
-</body>
-
+      });
+    </script>
+  </body>
 </html>
