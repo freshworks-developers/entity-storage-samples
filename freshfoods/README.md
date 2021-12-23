@@ -1,18 +1,9 @@
-## Your First App
+# Freshfoods - Sample app for Custom Objects
 
-Congratulations on creating your first app! Feel free to replace this text with your app's actual description.
+This app presents a full case study of using Freshdesk to gather delivery requests and see them in a dashboard. It stores all data using Custom Objects.
 
-### Folder structure explained
+This app is broadly divided into:
 
-    .
-    ├── README.md                  This file
-    ├── app                        Contains the files that are required for the front end component of the app
-    │   ├── app.js                 JS to render the dynamic portions of the app
-    │   ├── icon.svg               Sidebar icon SVG file. Should have a resolution of 64x64px.
-    │   ├── freshdesk_logo.png     The Freshdesk logo that is displayed in the app
-    │   ├── style.css              Style sheet for the app
-    │   ├── template.html          Contains the HTML required for the app’s UI
-    ├── config                     Contains the installation parameters and OAuth configuration
-    │   ├── iparams.json           Contains the parameters that will be collected during installation
-    │   └── iparam_test_data.json  Contains sample Iparam values that will used during testing
-    └── manifest.json              Contains app meta data and configuration information
+- a serverless component that creates new records by listening to `onTicketCreate` event
+- a sidebar frontend component that renders the location of the current ticket
+- a full page app component that shows an interactive dashboard
