@@ -13,11 +13,11 @@
       "fwd_emails": [],
       "reply_cc_emails": [],
       "email_config_id": null,
-      "id": 18,
+      "id": 82,
       "group_id": null,
       "product_id": null,
       "company_id": null,
-      "requester_id": 48010694193,
+      "requester_id": 64021580467,
       "responder_id": null,
       "status": 2,
       "priority": 1,
@@ -28,19 +28,19 @@
       "tweet_id": null,
       "cc_emails": [],
       "to_emails": null,
-      "created_at": "2020-10-13T11:41:58Z",
-      "updated_at": "2020-10-13T11:41:58Z",
+      "created_at": "2021-12-23T14:05:43Z",
+      "updated_at": "2021-12-23T14:05:43Z",
       "attachments": [],
       "custom_fields": {}
     },
     "requester": {
-      "id": 48010694193,
+      "id": 64021580467,
       "name": "Marcus Aurelius",
       "email": "marcus.aurelius@example.com",
       "mobile": null,
       "phone": null,
       "language": "en",
-      "created_at": "2020-10-13T07:48:43Z"
+      "created_at": "2021-12-23T14:05:42Z"
     }
   }
 }

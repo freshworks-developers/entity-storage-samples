@@ -67,7 +67,7 @@ function parseStandardFields(data) {
 // Obtain structured data of the address components
 async function reverseGeoCode(args, data) {
   let t_cor = {};
-  const key = args.iparams["gmp-api-key"];
+  const key = args.iparams["gmp_api_key"];
   const latlng = String(data.loc_lat) + "," + String(data.loc_long);
   const url = `https://maps.googleapis.com/maps/api/geocode/json?key=${key}&latlng=${latlng}`;
   let response;
@@ -128,7 +128,7 @@ async function computeDistanceMatrix(args, data) {
   const origins = String(data.loc_lat) + "," + String(data.loc_long);
   const dest =
     "37.564457,-122.331298|37.42097, -122.130387|37.320918,-122.036744"; // Delivery hubs are hardcoded, supposed to be separate entities on their own
-  const key = args.iparams["gmp-api-key"];
+  const key = args.iparams["gmp_api_key"];
   const url = `https://maps.googleapis.com/maps/api/distancematrix/json?key=${key}&units=${units}&origins=${origins}&destinations=${dest}`;
   let response;
 

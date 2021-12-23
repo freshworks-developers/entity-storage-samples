@@ -1,9 +1,15 @@
 {
-  "gmp-api-key": {
+  "gmp_api_key": {
     "display_name": "Google Maps API key",
     "description": "Please enter your Google Maps API Key.",
     "type": "text",
     "required": true,
     "secure": true
+  },
+  "mapbox_token": {
+    "display_name": "Mapbox token",
+    "description": "API key (public token) for Mapbox",
+    "type": "text",
+    "required": true
   }
 }
