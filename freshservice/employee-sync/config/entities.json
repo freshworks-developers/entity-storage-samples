@@ -1,0 +1,109 @@
+{
+  "employees": {
+    "fields": [
+      {
+        "name": "employee_id",
+        "label": "Employee ID",
+        "type": "text",
+        "filterable": false,
+        "required": true
+      },
+      {
+        "name": "employee_type",
+        "label": "Employee type",
+        "type": "enum",
+        "choices": [
+          { "id": 1, "value": "Full Time" },
+          { "id": 2, "value": "Part Time" },
+          { "id": 3, "value": "Contract" },
+          { "id": 4, "value": "Internship" },
+          { "id": 5, "value": "Temporary" },
+          { "id": 6, "value": "Seasonal" },
+          { "id": 7, "value": "Voluntary" },
+          { "id": 8, "value": "Other" }
+        ]
+      },
+      {
+        "name": "official_email",
+        "label": "Work Email",
+        "type": "text",
+        "filterable": false,
+        "required": true
+      },
+      {
+        "name": "terminated",
+        "label": "Terminated?",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "designation",
+        "label": "Designation",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "department",
+        "label": "Department",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "first_name",
+        "label": "First name",
+        "type": "text",
+        "filterable": true,
+        "required": false
+      },
+      {
+        "name": "last_name",
+        "label": "Last name",
+        "type": "text",
+        "filterable": true,
+        "required": true
+      },
+      {
+        "name": "synced_at",
+        "label": "Last sync",
+        "type": "datetime",
+        "required": true
+      }
+    ]
+  },
+  "sync_history": {
+    "fields": [
+      {
+        "name": "sync_start",
+        "type": "datetime",
+        "filterable": true,
+        "required": true
+      },
+      {
+        "name": "sync_end",
+        "type": "datetime",
+        "filterable": true,
+        "required": true
+      },
+      {
+        "name": "status",
+        "type": "enum",
+        "choices": [
+          { "id": 1, "value": "Success" },
+          { "id": 2, "value": "Error" }
+        ],
+        "filterable": true,
+        "required": true
+      },
+      {
+        "name": "items_synced",
+        "type": "integer",
+        "required": true
+      },
+      {
+        "name": "domain",
+        "type": "paragraph",
+        "required": false
+      }
+    ]
+  }
+}

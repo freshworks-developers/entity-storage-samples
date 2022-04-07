@@ -1,0 +1,14 @@
+{
+  "platform-version": "2.2",
+  "product": {
+    "freshservice": {
+      "events": {
+      }
+    }
+  },
+  "whitelisted-domains": [],
+  "engines": {
+    "node": "14.19.1",
+    "fdk": "8.0.1"
+  }
+}

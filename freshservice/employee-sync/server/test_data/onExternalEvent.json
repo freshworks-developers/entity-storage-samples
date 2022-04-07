@@ -1,0 +1,16 @@
+{
+  "account_id": "12345",
+  "event": "onExternalEvent",
+  "timestamp": 1496400354326,
+  "region": "US",
+  "domain": "example.freshservice.com",
+  "data": {
+    "message": {
+      "id": 123456,
+      "action": "asset_added"
+    }
+  },
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}
