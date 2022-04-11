@@ -10,9 +10,5 @@
       }
     }
   },
-  "whitelisted-domains": [],
-  "engines": {
-    "node": "12.22.7",
-    "fdk": "7.2.1"
-  }
+  "whitelisted-domains": []
 }
