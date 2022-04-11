@@ -95,7 +95,7 @@
         "required": true
       },
       {
-        "name": "items_synced",
+        "name": "num_synced_records",
         "type": "integer",
         "required": true
       },
