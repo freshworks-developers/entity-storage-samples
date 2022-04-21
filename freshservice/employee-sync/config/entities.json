@@ -74,18 +74,21 @@
     "fields": [
       {
         "name": "sync_start",
+        "label": "Sync start time",
         "type": "datetime",
         "filterable": true,
         "required": true
       },
       {
         "name": "sync_end",
+        "label": "Sync end time",
         "type": "datetime",
         "filterable": true,
         "required": true
       },
       {
         "name": "status",
+        "label": "Status",
         "type": "enum",
         "choices": [
           { "id": 1, "value": "Success" },
@@ -96,11 +99,13 @@
       },
       {
         "name": "num_synced_records",
+        "label": "No. of records synced",
         "type": "integer",
         "required": true
       },
       {
         "name": "domain",
+        "label": "Domain",
         "type": "paragraph",
         "required": false
       }

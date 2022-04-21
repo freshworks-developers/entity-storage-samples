@@ -1,7 +1,7 @@
 {
   "timestamp": 1496400354326,
   "account_id": "13",
-  "domain": "example.freshservice.com",
+  "domain": "devrel-test.freshservice.com",
   "event": "onScheduledEvent",
   "region": "US",
   "data": {

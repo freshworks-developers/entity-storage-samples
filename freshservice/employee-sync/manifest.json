@@ -3,12 +3,21 @@
   "product": {
     "freshservice": {
       "events": {
+        "onAppInstall": {
+          "handler": "install"
+        },
+        "onScheduledEvent": {
+          "handler": "sync_records"
+        }
       }
     }
   },
-  "whitelisted-domains": [],
+  "whitelisted-domains": ["https://*.freshteam.com"],
   "engines": {
     "node": "14.19.1",
     "fdk": "8.0.1"
+  },
+  "dependencies": {
+    "@freshworks/api-sdk": "^0.2"
   }
 }
