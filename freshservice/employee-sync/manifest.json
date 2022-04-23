@@ -4,10 +4,10 @@
     "freshservice": {
       "events": {
         "onAppInstall": {
-          "handler": "install"
+          "handler": "onAppInstall"
         },
         "onScheduledEvent": {
-          "handler": "sync_records"
+          "handler": "onScheduledEvent"
         }
       }
     }
@@ -18,6 +18,6 @@
     "fdk": "8.0.1"
   },
   "dependencies": {
-    "@freshworks/api-sdk": "^0.2"
+    "@freshworks/api-sdk": "0.2.1"
   }
 }
