@@ -17,7 +17,5 @@
     "node": "14.19.1",
     "fdk": "8.0.1"
   },
-  "dependencies": {
-    "@freshworks/api-sdk": "0.2.1"
-  }
+  "dependencies": {}
 }

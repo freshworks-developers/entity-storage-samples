@@ -2,11 +2,17 @@
   "employees": {
     "fields": [
       {
+        "name": "id",
+        "label": "Internal ID",
+        "type": "integer",
+        "required": true
+      },
+      {
         "name": "employee_id",
         "label": "Employee ID",
         "type": "text",
         "filterable": false,
-        "required": true
+        "required": false
       },
       {
         "name": "employee_type",
