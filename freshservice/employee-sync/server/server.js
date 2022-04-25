@@ -21,26 +21,66 @@ function employeeType(rawValue) {
   return ValidEmployeeTypesEnum[value] ? value : "Other";
 }
 
-async function setEmployeeRecords(records) {
+/**
+ * Save sync history
+ *
+ * @param {string} start - Date string in ISO format
+ * @param {string} end - Date string in ISO format
+ * @param {number} num - Number of items synced
+ * @param {string} domain - The Freshteam domain
+ */
+async function saveSyncHistory(start, end, num, domain) {
+  const entity = $db.entity({ version: "v1" });
+  const syncHistory = entity.get("sync_history");
+  try {
+    const res = await syncHistory.create({
+      sync_start: start,
+      sync_end: end,
+      num_synced_records: num,
+      domain,
+    });
+
+    console.log(res);
+  } catch (err) {
+    console.log(
+      `[Custom Objects] Unable to create sync history record. Reason: ${err.message}`
+    );
+  }
+}
+
+/**
+ * Save employee objects received from the REST API to Custom Objects store
+ *
+ * @param {Array<object>} records - An array of Employee objects
+ * @param {string} synced_at - Synced at timestamp as ISO formatted Date string
+ * @returns {number} - Number of records saved in the custom objects data store
+ */
+async function saveEmployeeRecords(records, synced_at) {
   const entity = $db.entity({ version: "v1" });
   const employees = entity.get("employees");
-  const now = (new Date()).toISOString();
   let counter = 0;
+  // Iterate over records received and try to create an entity record for each
   for (const r of records) {
-    const res = await employees.create({
-      id: r.id,
-      employee_id: r.employee_id,
-      employee_type: employeeType(r.employee_type),
-      official_email: r.official_email,
-      terminated: r.terminated,
-      designation: r.designation,
-      department: r.department_id?.toString(),
-      first_name: r.first_name,
-      last_name: r.last_name,
-      synced_at: now,
-    });
-    counter++;
-    console.log(res);
+    try {
+      const res = await employees.create({
+        id: r.id,
+        employee_id: r.employee_id,
+        employee_type: employeeType(r.employee_type),
+        official_email: r.official_email,
+        terminated: r.terminated,
+        designation: r.designation,
+        department: r.department_id?.toString(),
+        first_name: r.first_name,
+        last_name: r.last_name,
+        synced_at,
+      });
+      counter++;
+      console.log(res);
+    } catch (err) {
+      console.log(
+        `[Custom Objects] Unable to create employee record for id ${r.id}. Reason: ${err.message}`
+      );
+    }
   }
   return counter;
 }
@@ -48,7 +88,7 @@ async function setEmployeeRecords(records) {
 // ----------------------------------------------
 // Sync
 // ----------------------------------------------
-function setSyncState(headers, currentPage) {
+function setSyncPaginationState(headers, currentPage) {
   const state = {
     perPage: parseInt(headers["per-page"]),
     totalObjects: parseInt(headers["total-objects"]),
@@ -57,17 +97,17 @@ function setSyncState(headers, currentPage) {
   };
   try {
     // Update sync pagination
-    return $db.update("sync_state", "set", state);
+    return $db.update("sync_pagination_state", "set", state);
   } catch (err) {
     // If update fails, try setting the value.
     console.log(`Error setting sync pagination in $db: ${err.message}`);
-    return $db.set("sync_state", state);
+    return $db.set("sync_pagination_state", state);
   }
 }
 
-async function getSyncState() {
+async function getSyncPaginationState() {
   try {
-    return await $db.get("sync_state");
+    return await $db.get("sync_pagination_state");
   } catch (err) {
     console.log(`Error getting sync pagination state: ${err.message}`);
     return {
@@ -79,6 +119,12 @@ async function getSyncState() {
   }
 }
 
+/**
+ * Fetch records from Freshteam REST APIs "List all Employees" endpoint
+ *
+ * @param {number} page - Pagination page number
+ * @returns {Array<object>} - Returns an array of employee objects
+ */
 async function getEmployees(page = 1) {
   // Prepare URL and headers
   const url = `<%= iparam.$freshteam_domain.url %>/api/employees?page=${page}&sort=employee_id&sort_type=asc`;
@@ -94,16 +140,22 @@ async function getEmployees(page = 1) {
   });
   // Update sync pagination state if response was successful
   if (res.status === 200 || res.status === 201) {
-    await setSyncState(res.headers, page);
+    await setSyncPaginationState(res.headers, page);
   }
   // Return response body
   return JSON.parse(res.response);
 }
 
-async function syncRecords() {
-  const state = await getSyncState();
+/**
+ * Handles logic for syncing records from the Freshteam REST API following pagination requirements
+ * and persisting the results in custom objects data store
+ *
+ * @param {string} domain - The Freshteam domain used to sync records
+ */
+async function syncRecords(domain) {
+  const startTime = new Date().toISOString();
+  const state = await getSyncPaginationState();
   let currentPage;
-  console.log(state);
 
   // Handle pagination
   if (state.totalPages > 0 && state.totalPages === state.currentPage) {
@@ -117,9 +169,15 @@ async function syncRecords() {
     console.log(`[Sync] Syncing page ${currentPage}`);
   }
 
+  // Call the REST API
   const res = await getEmployees(currentPage);
+  // If there are results, then save them
   if (Array.isArray(res) && res.length > 0) {
-    await setEmployeeRecords(res);
+    // Update custom objects store
+    const counter = await saveEmployeeRecords(res, startTime);
+    // Prepare endtime and save sync history record
+    const endTime = new Date().toISOString();
+    await saveSyncHistory(startTime, endTime, counter, domain);
   }
 }
 
@@ -163,9 +221,10 @@ exports = {
    * Handler invoked `onScheduledEvent`
    * @param {object} args
    */
-  async onScheduledEvent() {
+  async onScheduledEvent(args) {
     try {
-      await syncRecords();
+      const domain = `${args.iparams.freshteam_domain}.freshteam.com`;
+      await syncRecords(domain);
     } catch (err) {
       console.log(`Error syncing records: ${err.message}`);
     }
