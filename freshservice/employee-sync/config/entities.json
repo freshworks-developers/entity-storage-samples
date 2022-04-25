@@ -93,17 +93,6 @@
         "required": true
       },
       {
-        "name": "status",
-        "label": "Status",
-        "type": "enum",
-        "choices": [
-          { "id": 1, "value": "Success" },
-          { "id": 2, "value": "Error" }
-        ],
-        "filterable": true,
-        "required": true
-      },
-      {
         "name": "num_synced_records",
         "label": "No. of records synced",
         "type": "integer",
