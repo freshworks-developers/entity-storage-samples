@@ -33,14 +33,12 @@ async function saveSyncHistory(start, end, num, domain) {
   const entity = $db.entity({ version: "v1" });
   const syncHistory = entity.get("sync_history");
   try {
-    const res = await syncHistory.create({
+    await syncHistory.create({
       sync_start: start,
       sync_end: end,
       num_synced_records: num,
       domain,
     });
-
-    console.log(res);
   } catch (err) {
     console.log(
       `[Custom Objects] Unable to create sync history record. Reason: ${err.message}`
@@ -61,21 +59,34 @@ async function saveEmployeeRecords(records, synced_at) {
   let counter = 0;
   // Iterate over records received and try to create an entity record for each
   for (const r of records) {
+    // Prepare entities data payload
+    const data = {
+      internal_id: r.id,
+      employee_id: r.employee_id,
+      employee_type: employeeType(r.employee_type),
+      official_email: r.official_email,
+      terminated: r.terminated,
+      designation: r.designation,
+      department: r.department_id?.toString(),
+      first_name: r.first_name,
+      last_name: r.last_name,
+      synced_at,
+    };
     try {
-      const res = await employees.create({
-        id: r.id,
-        employee_id: r.employee_id,
-        employee_type: employeeType(r.employee_type),
-        official_email: r.official_email,
-        terminated: r.terminated,
-        designation: r.designation,
-        department: r.department_id?.toString(),
-        first_name: r.first_name,
-        last_name: r.last_name,
-        synced_at,
-      });
+      // See if the record exists
+      const displayId = await getSyncMap(r.id);
+
+      if (displayId !== null) {
+        // If record exists, update the entry
+        await employees.update(displayId, data);
+      } else {
+        // If record does not exist, create a new entry
+        const res = await employees.create(data);
+        // Update the sync map to map between employee internal id and custm objects display id
+        await setSyncMap(r.id, res.record.display_id);
+      }
+      // Increment the counter
       counter++;
-      console.log(res);
     } catch (err) {
       console.log(
         `[Custom Objects] Unable to create employee record for id ${r.id}. Reason: ${err.message}`
@@ -88,6 +99,32 @@ async function saveEmployeeRecords(records, synced_at) {
 // ----------------------------------------------
 // Sync
 // ----------------------------------------------
+async function setSyncMap(id, displayId) {
+  try {
+    await $db.set(`sync_map:${id}`, { displayId });
+  } catch (err) {
+    console.log(
+      `[Sync] Error setting display_id for employee id ${id}. Reason: ${err.message}`
+    );
+  }
+}
+
+async function getSyncMap(id) {
+  try {
+    const res = await $db.get(`sync_map:${id}`);
+    return res.displayId;
+  } catch (err) {
+    if (err.status && err.status === 404) {
+      console.log(`[Sync] No existing record found for employee id ${id}`);
+    } else {
+      console.log(
+        `[Sync] Error getting display_id for employee id ${id}. Reason: ${err.message}`
+      );
+    }
+    return null;
+  }
+}
+
 function setSyncPaginationState(headers, currentPage) {
   const state = {
     perPage: parseInt(headers["per-page"]),
@@ -109,7 +146,13 @@ async function getSyncPaginationState() {
   try {
     return await $db.get("sync_pagination_state");
   } catch (err) {
-    console.log(`Error getting sync pagination state: ${err.message}`);
+    if (err.status && err.status === 404) {
+      console.log(
+        `Sync state doesn't exist yet, possible first run: ${err.message}`
+      );
+    } else {
+      console.log(`Error getting sync pagination state: ${err.message}`);
+    }
     return {
       perPage: 0,
       totalObjects: 0,

@@ -2,7 +2,7 @@
   "employees": {
     "fields": [
       {
-        "name": "id",
+        "name": "internal_id",
         "label": "Internal ID",
         "type": "integer",
         "required": true
