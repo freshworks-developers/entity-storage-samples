@@ -2,6 +2,12 @@
   "platform-version": "2.2",
   "product": {
     "freshservice": {
+      "location": {
+        "ticket_sidebar": {
+          "url": "employee.html",
+          "icon": "styles/images/icon.svg"
+        }
+      },
       "events": {
         "onAppInstall": {
           "handler": "onAppInstall"
@@ -15,7 +21,7 @@
   "whitelisted-domains": ["https://*.freshteam.com"],
   "engines": {
     "node": "14.19.1",
-    "fdk": "8.0.1"
+    "fdk": "8.2.0"
   },
   "dependencies": {}
 }
