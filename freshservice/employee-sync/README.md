@@ -8,10 +8,20 @@ A scheduled function syncs list of employees using the Freshteam API on an inter
 
 ## Screenshots
 
+### Tickets page
+
 Ticket page with app fetching data from custom objects store:
 
-![Ticket page screenshot](screenshots/screenshot-1.png)
+| Description                  | Screenshot                                                          |
+| ---------------------------- | ------------------------------------------------------------------- |
+| App in sidebar with a ticket | ![Ticket page screenshot](screenshots/screenshot-1.png)             |
+| App close up                 | ![App close-up screenshot](screenshots/screenshot-2.png)            |
+| App close up (scrolled)      | ![App close-up screenshot (scrolled)](screenshots/screenshot-3.png) |
 
-![App close-up screenshot](screenshots/screenshot-2.png)
+### Sync history
 
-![App close-up screenshot (scrolled)](screenshots/screenshot-3.png)
+A full page view showing a table of synced history items.
+
+| Description                      | Screenshot                                               |
+| -------------------------------- | -------------------------------------------------------- |
+| Full page app showing data table | ![Sync history data table](screenshots/screenshot-4.png) |

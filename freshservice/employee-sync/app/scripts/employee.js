@@ -58,7 +58,7 @@ function renderDataTable(emp) {
       {
         key: "field",
         text: "Field",
-        position: 1
+        position: 1,
       },
       {
         key: "value",
@@ -81,8 +81,8 @@ function renderDataTable(emp) {
       {
         id: "data_synced_at",
         field: "Last sync",
-        value: (new Date(emp.synced_at)).toLocaleString()
-      }
+        value: new Date(emp.synced_at).toLocaleString(),
+      },
     ],
   };
   const empData = document.getElementById("empDetails");
