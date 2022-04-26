@@ -1,6 +1,10 @@
 // ----------------------------
 // Setup
 // ----------------------------
+function $(el) {
+  return document.querySelector(el);
+}
+
 document.onreadystatechange = function () {
   if (document.readyState === "interactive") {
     app
@@ -19,10 +23,11 @@ async function onAppActivate(client) {
   const e = await lookupEmployee(client, requester.email);
   if (e === null) {
     console.log("Employee not found");
+    renderNotFound();
     return;
   }
   // Render the table
-  renderDataTable(e.data);
+  renderCard(e.data);
 }
 
 function handleErr(err) {
@@ -53,8 +58,7 @@ function renderDataTable(emp) {
       {
         key: "field",
         text: "Field",
-        position: 1,
-        textAlign: "center",
+        position: 1
       },
       {
         key: "value",
@@ -65,35 +69,39 @@ function renderDataTable(emp) {
     ],
     rows: [
       {
-        id: "data_name",
-        field: "Name",
-        value: `${emp.first_name} ${emp.last_name}`,
-      },
-      {
-        id: "data_designation",
-        field: "Designation",
-        value: emp.designation,
-      },
-      {
-        id: "data_employee_type",
-        field: "Type",
-        value: emp.employee_type,
-      },
-      {
-        id: "data_employee_id",
-        field: "Employee ID",
-        value: emp.employee_id,
+        id: "data_department",
+        field: "Department",
+        value: emp.department,
       },
       {
         id: "data_terminated",
         field: "Terminated",
         value: emp.terminated,
       },
+      {
+        id: "data_synced_at",
+        field: "Last sync",
+        value: (new Date(emp.synced_at)).toLocaleString()
+      }
     ],
   };
-  const empData = document.getElementById("empData");
+  const empData = document.getElementById("empDetails");
   empData.columns = data.columns;
   empData.rows = data.rows;
+}
+
+function renderNotFound() {
+  $("#container").innerHTML = `
+    <div class="fw-type-sm fw-color-smoke-300">Employee record not found.</div>
+  `;
+}
+
+function renderCard(emp) {
+  $("#emp_name").textContent = `${emp.first_name} ${emp.last_name}`.trim();
+  $("#emp_designation").value = nullable(emp.designation);
+  $("#emp_type").value = nullable(emp.employee_type);
+  $("#emp_employee_id").textContent = nullable(emp.employee_id);
+  renderDataTable(emp);
 }
 
 // ----------------------------

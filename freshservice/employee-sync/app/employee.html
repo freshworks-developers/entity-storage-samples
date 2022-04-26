@@ -18,17 +18,36 @@
       nomodule
       src="https://unpkg.com/@freshworks/crayons@v3/dist/crayons/crayons.js"
     ></script>
-    <style></style>
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+    </style>
   </head>
 
   <body>
-    <div class="fw-flex fw-flex-column fw-p-4 fw-card-2">
-      <h2 class="fw-type-h3">Employee data</h2>
-      <fw-data-table
-        id="empData"
-        label="Employee data"
-        is-selectable="false"
-      ></fw-data-table>
+    <div id="container">
+      <div class="fw-flex fw-flex-column fw-p-8 fw-m-4 fw-card-2">
+        <div
+          id="emp_name"
+          class="fw-type-h4 fw-mx-4 fw-my-8 fw-color-elephant-900"
+        ></div>
+        <div
+          id="emp_employee_id"
+          class="fw-mx-4 fw-mb-8 fw-color-smoke-300"
+        ></div>
+        <div class="fw-flex fw-flex-row fw-type-sm fw-color-smoke-700">
+          <fw-label id="emp_designation" class="fw-px-4"></fw-label>
+          <fw-label id="emp_type" class="fw-px-4"></fw-label>
+        </div>
+      </div>
+      <div class="fw-m-8">
+        <fw-data-table
+          id="empDetails"
+          label="Employee details"
+          is-selectable="false"
+        ></fw-data-table>
+      </div>
     </div>
   </body>
   <script src="scripts/employee.js"></script>
