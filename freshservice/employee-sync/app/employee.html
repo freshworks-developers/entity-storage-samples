@@ -6,7 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Employee details</title>
     <script src="https://static.freshdev.io/fdk/2.0/assets/fresh_client.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/@freshworks/crayons@v3/css/crayons-min.css">
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@freshworks/crayons@v3/css/crayons-min.css"
+    />
     <script
       type="module"
       src="https://unpkg.com/@freshworks/crayons@v3/dist/crayons/crayons.esm.js"
@@ -15,11 +18,17 @@
       nomodule
       src="https://unpkg.com/@freshworks/crayons@v3/dist/crayons/crayons.js"
     ></script>
+    <style></style>
   </head>
 
   <body>
-    <div class="fw-flex">
-      Helloo
+    <div class="fw-flex fw-flex-column fw-p-4 fw-card-2">
+      <h2 class="fw-type-h3">Employee data</h2>
+      <fw-data-table
+        id="empData"
+        label="Employee data"
+        is-selectable="false"
+      ></fw-data-table>
     </div>
   </body>
   <script src="scripts/employee.js"></script>

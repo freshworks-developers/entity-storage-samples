@@ -33,7 +33,7 @@
         "name": "official_email",
         "label": "Work Email",
         "type": "text",
-        "filterable": false,
+        "filterable": true,
         "required": true
       },
       {
