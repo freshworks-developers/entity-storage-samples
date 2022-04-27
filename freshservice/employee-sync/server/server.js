@@ -50,10 +50,11 @@ async function saveSyncHistory(start, end, num, domain) {
  * Save employee objects received from the REST API to Custom Objects store
  *
  * @param {Array<object>} records - An array of Employee objects
+ * @param {Array<object>} branches - An array of Branch objects
  * @param {string} synced_at - Synced at timestamp as ISO formatted Date string
  * @returns {number} - Number of records saved in the custom objects data store
  */
-async function saveEmployeeRecords(records, synced_at) {
+async function saveEmployeeRecords(records, branches, synced_at) {
   const entity = $db.entity({ version: "v1" });
   const employees = entity.get("employees");
   let counter = 0;
@@ -72,6 +73,14 @@ async function saveEmployeeRecords(records, synced_at) {
       last_name: r.last_name,
       synced_at,
     };
+    // Filter out branch information
+    const branch = branches.find(b => b.id === r.branch_id)
+    if (branch) {
+      data.branch_name = branch.name;
+      data.branch_main_office = branch.main_office;
+      data.branch_city = branch.city;
+      data.branch_country = branch.country_code;
+    }
     try {
       // See if the record exists
       const displayId = await getSyncMap(r.id);
@@ -82,6 +91,7 @@ async function saveEmployeeRecords(records, synced_at) {
       } else {
         // If record does not exist, create a new entry
         const res = await employees.create(data);
+
         // Update the sync map to map between employee internal id and custm objects display id
         await setSyncMap(r.id, res.record.display_id);
       }
@@ -162,6 +172,11 @@ async function getSyncPaginationState() {
   }
 }
 
+
+// ----------------------------------------------
+// REST API calls
+// ----------------------------------------------
+
 /**
  * Fetch records from Freshteam REST APIs "List all Employees" endpoint
  *
@@ -190,6 +205,45 @@ async function getEmployees(page = 1) {
 }
 
 /**
+ * Fetch records from Freshteam REST APIs "List all Branches" endpoint
+ *
+ * @param {number} page - Pagination page number
+ * @returns {Array<object>} - Returns an array of branch objects
+ */
+ async function getBranches(page = 1) {
+   let branches = [];
+  // Prepare URL and headers
+  const url = `<%= iparam.$freshteam_domain.url %>/api/branches?page=${page}`;
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: "Bearer <%= iparam.freshteam_api_key %>",
+  };
+  // Send request
+  const res = await $request.get(url, {
+    headers,
+    maxAttempts: 3,
+    retryDelay: 1000,
+  });
+  branches = branches.concat(JSON.parse(res.response));
+  const totalPages = res.headers["total-pages"] ? parseInt(res.headers["total-pages"]) : 1;
+
+  // If response is successfull, and more pages exist, paginate the response by recursively calling the function.
+  // WARNING: Do better state mangement in production instead of recursively calling the function.
+  // WARNING: This will work only if the list of branches is small enough to not hit API rate limits or execution timeouts.
+  if ((res.status === 200 || res.status === 201) && (totalPages > page)) {
+    branches = branches.concat(await getBranches(page + 1));
+  }
+
+  // Return response body
+  return branches;
+}
+
+
+// ----------------------------------------------
+// Main business logic
+// ----------------------------------------------
+
+/**
  * Handles logic for syncing records from the Freshteam REST API following pagination requirements
  * and persisting the results in custom objects data store
  *
@@ -212,12 +266,14 @@ async function syncRecords(domain) {
     console.log(`[Sync] Syncing page ${currentPage}`);
   }
 
-  // Call the REST API
+  // Call the REST API to get branches list
+  const branches = await getBranches();
+  // Call the REST API to get employees list
   const res = await getEmployees(currentPage);
   // If there are results, then save them
   if (Array.isArray(res) && res.length > 0) {
     // Update custom objects store
-    const counter = await saveEmployeeRecords(res, startTime);
+    const counter = await saveEmployeeRecords(res, branches, startTime);
     // Prepare endtime and save sync history record
     const endTime = new Date().toISOString();
     await saveSyncHistory(startTime, endTime, counter, domain);
@@ -225,7 +281,7 @@ async function syncRecords(domain) {
 }
 
 // ----------------------------------------------
-// Schedule
+// Scheduler
 // ----------------------------------------------
 
 function createSchedule() {
