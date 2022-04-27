@@ -8,6 +8,20 @@
         "required": true
       },
       {
+        "name": "first_name",
+        "label": "First name",
+        "type": "text",
+        "filterable": true,
+        "required": false
+      },
+      {
+        "name": "last_name",
+        "label": "Last name",
+        "type": "text",
+        "filterable": true,
+        "required": true
+      },
+      {
         "name": "employee_id",
         "label": "Employee ID",
         "type": "text",
@@ -55,18 +69,31 @@
         "required": false
       },
       {
-        "name": "first_name",
-        "label": "First name",
-        "type": "text",
-        "filterable": true,
-        "required": false
-      },
-      {
-        "name": "last_name",
-        "label": "Last name",
-        "type": "text",
-        "filterable": true,
-        "required": true
+        "name": "branch",
+        "label": "Branch",
+        "type": "section",
+        "fields": [
+          {
+            "name": "branch_name",
+            "label": "Branch name",
+            "type": "text"
+          },
+          {
+            "name": "branch_city",
+            "label": "Branch city",
+            "type": "text"
+          },
+          {
+            "name": "branch_country",
+            "label": "Branch country",
+            "type": "text"
+          },
+          {
+            "name": "branch_main_office",
+            "label": "Main office?",
+            "type": "boolean"
+          }
+        ]
       },
       {
         "name": "synced_at",
