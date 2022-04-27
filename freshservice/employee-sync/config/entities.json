@@ -79,19 +79,26 @@
             "type": "text"
           },
           {
-            "name": "branch_city",
-            "label": "Branch city",
-            "type": "text"
-          },
-          {
-            "name": "branch_country",
-            "label": "Branch country",
-            "type": "text"
-          },
-          {
             "name": "branch_main_office",
             "label": "Main office?",
             "type": "boolean"
+          },
+          {
+            "name": "branch_location",
+            "label": "Location",
+            "type": "section",
+            "fields": [
+              {
+                "name": "branch_city",
+                "label": "Branch city",
+                "type": "text"
+              },
+              {
+                "name": "branch_country",
+                "label": "Branch country",
+                "type": "text"
+              }
+            ]
           }
         ]
       },
