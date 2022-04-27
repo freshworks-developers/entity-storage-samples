@@ -1,4 +1,4 @@
-# Freshservice custom objects data-sync app (WIP)
+# Freshservice custom objects data-sync app
 
 This app syncs employee data from Freshteam and stores that data in Freshservice using Custom Objects.
 
