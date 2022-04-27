@@ -69,6 +69,16 @@ function renderDataTable(emp) {
     ],
     rows: [
       {
+        id: "data_branch_name",
+        field: "Branch",
+        value: `${emp.branch_name} ${emp.branch_main_office ? "(Main)" : ""}`.trim()
+      },
+      {
+        id: "data_branch_location",
+        field: "Location",
+        value: `${emp.branch_city}, ${emp.branch_country}`
+      },
+      {
         id: "data_department",
         field: "Department",
         value: emp.department,
