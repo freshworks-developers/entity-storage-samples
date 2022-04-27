@@ -51,10 +51,11 @@ async function saveSyncHistory(start, end, num, domain) {
  *
  * @param {Array<object>} records - An array of Employee objects
  * @param {Array<object>} branches - An array of Branch objects
+ * @param {Array<object>} departments - An array of Department objects
  * @param {string} synced_at - Synced at timestamp as ISO formatted Date string
  * @returns {number} - Number of records saved in the custom objects data store
  */
-async function saveEmployeeRecords(records, branches, synced_at) {
+async function saveEmployeeRecords(records, branches, departments, synced_at) {
   const entity = $db.entity({ version: "v1" });
   const employees = entity.get("employees");
   let counter = 0;
@@ -68,18 +69,22 @@ async function saveEmployeeRecords(records, branches, synced_at) {
       official_email: r.official_email,
       terminated: r.terminated,
       designation: r.designation,
-      department: r.department_id?.toString(),
       first_name: r.first_name,
       last_name: r.last_name,
       synced_at,
     };
     // Filter out branch information
-    const branch = branches.find(b => b.id === r.branch_id)
+    const branch = branches.find((b) => b.id === r.branch_id);
     if (branch) {
       data.branch_name = branch.name;
       data.branch_main_office = branch.main_office;
       data.branch_city = branch.city;
       data.branch_country = branch.country_code;
+    }
+    // Filter out department information
+    const department = departments.find((d) => d.id === r.department_id);
+    if (department) {
+      data.department = department.name;
     }
     try {
       // See if the record exists
@@ -172,7 +177,6 @@ async function getSyncPaginationState() {
   }
 }
 
-
 // ----------------------------------------------
 // REST API calls
 // ----------------------------------------------
@@ -210,8 +214,8 @@ async function getEmployees(page = 1) {
  * @param {number} page - Pagination page number
  * @returns {Array<object>} - Returns an array of branch objects
  */
- async function getBranches(page = 1) {
-   let branches = [];
+async function getBranches(page = 1) {
+  let branches = [];
   // Prepare URL and headers
   const url = `<%= iparam.$freshteam_domain.url %>/api/branches?page=${page}`;
   const headers = {
@@ -225,12 +229,14 @@ async function getEmployees(page = 1) {
     retryDelay: 1000,
   });
   branches = branches.concat(JSON.parse(res.response));
-  const totalPages = res.headers["total-pages"] ? parseInt(res.headers["total-pages"]) : 1;
+  const totalPages = res.headers["total-pages"]
+    ? parseInt(res.headers["total-pages"])
+    : 1;
 
   // If response is successfull, and more pages exist, paginate the response by recursively calling the function.
   // WARNING: Do better state mangement in production instead of recursively calling the function.
   // WARNING: This will work only if the list of branches is small enough to not hit API rate limits or execution timeouts.
-  if ((res.status === 200 || res.status === 201) && (totalPages > page)) {
+  if ((res.status === 200 || res.status === 201) && totalPages > page) {
     branches = branches.concat(await getBranches(page + 1));
   }
 
@@ -238,6 +244,41 @@ async function getEmployees(page = 1) {
   return branches;
 }
 
+/**
+ * Fetch records from Freshteam REST APIs "List all Departments" endpoint
+ *
+ * @param {number} page - Pagination page number
+ * @returns {Array<object>} - Returns an array of branch objects
+ */
+async function getDepartments(page = 1) {
+  let departments = [];
+  // Prepare URL and headers
+  const url = `<%= iparam.$freshteam_domain.url %>/api/departments?page=${page}`;
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: "Bearer <%= iparam.freshteam_api_key %>",
+  };
+  // Send request
+  const res = await $request.get(url, {
+    headers,
+    maxAttempts: 3,
+    retryDelay: 1000,
+  });
+  departments = departments.concat(JSON.parse(res.response));
+  const totalPages = res.headers["total-pages"]
+    ? parseInt(res.headers["total-pages"])
+    : 1;
+
+  // If response is successfull, and more pages exist, paginate the response by recursively calling the function.
+  // WARNING: Do better state mangement in production instead of recursively calling the function.
+  // WARNING: This will work only if the list of branches is small enough to not hit API rate limits or execution timeouts.
+  if ((res.status === 200 || res.status === 201) && totalPages > page) {
+    departments = departments.concat(await getDepartments(page + 1));
+  }
+
+  // Return response body
+  return departments;
+}
 
 // ----------------------------------------------
 // Main business logic
@@ -268,12 +309,19 @@ async function syncRecords(domain) {
 
   // Call the REST API to get branches list
   const branches = await getBranches();
+  // Call the REST API to get departments list
+  const departments = await getDepartments();
   // Call the REST API to get employees list
   const res = await getEmployees(currentPage);
   // If there are results, then save them
   if (Array.isArray(res) && res.length > 0) {
     // Update custom objects store
-    const counter = await saveEmployeeRecords(res, branches, startTime);
+    const counter = await saveEmployeeRecords(
+      res,
+      branches,
+      departments,
+      startTime
+    );
     // Prepare endtime and save sync history record
     const endTime = new Date().toISOString();
     await saveSyncHistory(startTime, endTime, counter, domain);
