@@ -1,0 +1,26 @@
+{
+  "platform-version": "2.2",
+  "product": {
+    "freshworks_crm": {
+      "location": {
+        "deal_entity_menu": {
+          "url": "index.html",
+          "icon": "styles/images/icon.svg"
+        },
+        "contact_entity_menu": {
+          "url": "index.html",
+          "icon": "styles/images/icon.svg"
+        },
+        "sales_account_entity_menu": {
+          "url": "index.html",
+          "icon": "styles/images/icon.svg"
+        }
+      }
+    }
+  },
+  "whitelisted-domains": [],
+  "engines": {
+    "node": "14.19.1",
+    "fdk": "8.3.3"
+  }
+}
