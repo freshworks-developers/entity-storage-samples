@@ -1,22 +1,64 @@
 {
-  "customers": {
-    "fields": [
+  "kyc_status": {
+    "schema": [
       {
-        "name": "customer_id",
-        "label": "Customer ID",
-        "type": "integer",
-        "filterable": true
-      },
-      {
-        "name": "name",
-        "label": "Name",
-        "type": "text"
-      },
-      {
-        "name": "email",
+        "name": "customer_email",
         "label": "Email",
         "type": "text",
+        "required": true,
         "filterable": true
+      },
+      {
+        "name": "status",
+        "label": "KYC Status",
+        "type": "enum",
+        "choices": [
+          { "id": 1, "value": "Pending" },
+          { "id": 2, "value": "Approved" },
+          { "id": 3, "value": "Rejected" }
+        ],
+        "required": true,
+        "filterable": true
+      },
+      {
+        "name": "applied_on",
+        "label": "Date of KYC application",
+        "type": "date",
+        "required": true
+      },
+      {
+        "name": "processed_on",
+        "label": "KYC application processed at",
+        "type": "datetime",
+        "required": false
+      },
+      {
+        "name": "document",
+        "label": "Document",
+        "type": "section",
+        "fields": [
+          {
+            "name": "document_type",
+            "label": "Document Type",
+            "type": "enum",
+            "choices": [
+              { "id": 1, "value": "Passport" },
+              { "id": 2, "value": "Voter ID" }
+            ],
+            "required": true
+          },
+          {
+            "name": "document_id",
+            "type": "text",
+            "label": "Document ID/number",
+            "required": true
+          },
+          {
+            "name": "document_url",
+            "type": "paragraph",
+            "label": "Document URL"
+          }
+        ]
       }
     ]
   }
