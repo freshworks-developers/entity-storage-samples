@@ -1,6 +1,6 @@
 {
   "kyc_status": {
-    "schema": [
+    "fields": [
       {
         "name": "customer_email",
         "label": "Email",

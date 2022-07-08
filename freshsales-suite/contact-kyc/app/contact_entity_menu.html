@@ -2,12 +2,30 @@
 
 <head>
   <script src="https://static.freshdev.io/fdk/2.0/assets/fresh_client.js"></script>
-  <script type="module" src="https://unpkg.com/@freshworks/crayons@3/dist/crayons/crayons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/@freshworks/crayons@3/dist/crayons/crayons.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/@freshworks/crayons@v3/css/crayons-min.css" />
+  <script type="module" src="https://unpkg.com/@freshworks/crayons@v3/dist/crayons/crayons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/@freshworks/crayons@v3/dist/crayons/crayons.js"></script>
 </head>
 
 <body>
-
+  <div>
+    <div class="fw-card-3 fw-p-20 fw-flex fw-flex-column">
+      <div class="fw-flex">
+        <span class="fw-flex-grow fw-type-h4">KYC Status</span>
+        <span class="fw-type-xs"><a href="#" id="doc_link">View document</a></span>
+      </div>
+      <div>
+        <div class="fw-flex fw-flex-row fw-mt-4">
+          <div id="customer_email" class="fw-type-h4 fw-mx-4 fw-my-8 fw-color-elephant-900"></div>
+          <fw-label id="status" size="16"></fw-label><br />
+        </div>
+      </div>
+      <div class="fw-type-xs fw-flex fw-justify-center fw-flex-row options">
+        <fw-data-table id="kyc_pending" label="KYC Status">
+      </div>
+    </div>
+  </div>
+  <div id="container"></div>
 </body>
 <script src="scripts/contact_entity_menu.js"></script>
 
