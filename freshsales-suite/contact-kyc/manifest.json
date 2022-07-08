@@ -6,11 +6,18 @@
         "contact_entity_menu": {
           "url": "contact_entity_menu.html",
           "icon": "images/icon.svg"
+        },
+        "full_page_app": {
+          "url": "kyc_pending_fullpage_app.html",
+          "icon": "images/icon.svg"
         }
       }
+      
     }
   },
-  "whitelisted-domains": [],
+  "whitelisted-domains": [
+    "https://*.freshworks.com"
+  ],
   "engines": {
     "node": "14.19.1",
     "fdk": "8.3.3"
