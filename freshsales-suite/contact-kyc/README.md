@@ -1,23 +1,24 @@
-## Your first Freshworks CRM App
+# Freshsales Suite contact KYC status
 
-This app template renders HTML code in placeholder and a product modal for the app user to simply navigate between the both.
+This app demonstrates Freshsales / Freshworks CRM Suite with entity storage where the KYC record for each contact is created on fly if the record doesn't exists. 
 
-### Files and Folders
+Once the record is created, KYC status is pending where you can either approve it from the [Full-page app](app/kyc_pending_fullpage_app.html) or [Contact Entity menu](app/contact_entity_menu.html). If the KYC record is updated, you can view the details on [Contact Entity menu](app/contact_entity_menu.html).
 
-    .
-    ├── README.md                   A detailed information about this app
-    ├── app                         Contains frontend related components
-    │   ├── index.html              Entry point to the frontend templates
-    │   ├── scripts                 Contains javascript files to support frontend
-    │   │   └── app.js
-    │   ├── styles                  Contains the styles to support frontend
-    │   │   ├── images              Contains the images to support frontend
-    │   │   │   └── icon.svg
-    │   │   └── styles.css
-    │   └── views                   Contains various frontend views
-    │       └── modal.html
-    ├── config                      Contains configuration files like iparams, oauth, etc.
-    │   └── iparams.json
-    └── manifest.json               A JSON file that includes metadata about the app
+## Screenshots
 
-Explore [more of app sample apps](https://community.developers.freshworks.com/t/freshworks-sample-apps/3604) on the Freshworks github respository.
+### Contact Entity menu
+
+
+| Description                  | Screenshot                                                                          |
+| ---------------------------- | ----------------------------------------------------------------------------------- |
+| KYC Status as pending        | ![Pending KYC status screenshot](screenshots/pending-contact-entity-menu.png)       |
+| KYC Status as approved       | ![Approved KYC Status screenshot](screenshots/approved-contact-entity-menu.png)     |
+| KYC Status as rejected       | ![Rejected KYC screenshot (scrolled)](screenshots/rejected-contact-entity-menu.png) |
+
+### Pending Full page app
+
+A full page view showing a table of synced history items.
+
+| Description                              | Screenshot                                                              |
+| ---------------------------------------- | ----------------------------------------------------------------------- |
+| Full page app showing pending KYC Status | ![KYC pending status data table](screenshots/pending-full-page-app.png) |
