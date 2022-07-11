@@ -12,7 +12,18 @@
           "icon": "images/icon.svg"
         }
       }
-      
+    },
+    "freshsales": {
+      "location": {
+        "contact_entity_menu": {
+          "url": "contact_entity_menu.html",
+          "icon": "images/icon.svg"
+        },
+        "full_page_app": {
+          "url": "kyc_pending_fullpage_app.html",
+          "icon": "images/icon.svg"
+        }
+      }
     }
   },
   "whitelisted-domains": [

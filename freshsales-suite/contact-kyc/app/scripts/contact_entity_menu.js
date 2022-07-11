@@ -41,6 +41,11 @@ async function createContactEntity(client, contactDetails) {
 }
 
 async function onAppActivate(client) {
+  await getCurrentEntity(client)
+}
+
+async function getCurrentEntity(client) {
+
   const iparams = await client.iparams.get()
   const { currentEntityInfo } = await client.data.get("currentEntityInfo");
   const contact = await getContact(client, currentEntityInfo.currentEntityId, iparams)
@@ -50,7 +55,7 @@ async function onAppActivate(client) {
     console.log("Contact details not found");
     renderNotFound();
     await createContactEntity(client, contactDetails.contact)
-    return
+    getCurrentEntity(client)
   }
   // Render the table
   renderCard(client, e.data);
@@ -113,9 +118,20 @@ async function rejectKYC(client, rowData) {
 }
 
 function renderCard(client, customer) {
-  $("#customer_email").textContent = `${customer.customer_email}`.trim();
+  $("#container").innerHTML = ""
   $("#status").value = customer.status
-  $("#doc_link").href = customer.document_url
+  $("#kyc_doc").innerHTML = `<img src='${customer.document_url}' class='fw-m-8 fw-justify-center' height='50%'/>`
+  switch (customer.status) {
+    case "Approved":
+      $("#status").color = "green"
+      break;
+    case "Pending":
+      $("#status").color = "yellow"
+      break;
+    case "Rejected":
+      $("#status").color = "red"
+      break;
+  }
   let records = []
   records.push(customer)
   renderDataTable(client, records)
