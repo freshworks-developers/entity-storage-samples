@@ -19,12 +19,17 @@ document.onreadystatechange = function () {
 };
 
 async function onAppActivate(client) {
-    const records = await lookupHistory(client);
-    renderDataTable(records);
+    await getPendingRecords(client)
 }
 
 function handleErr(err) {
     console.error(`Error occured. Details:`, err);
+}
+
+async function getPendingRecords(client) {
+    const records = await lookupHistory(client);
+    renderDataTable(client, records);
+    return true;
 }
 
 // ----------------------------
@@ -33,30 +38,30 @@ function handleErr(err) {
 async function approveKYC(client, rowData) {
     let customer_email = rowData.customer_email
     let contact = await contacts(client).getAll({
-      query: {
-        customer_email
-      },
+        query: {
+            customer_email
+        },
     })
     let updatedKYC = contact.records[0].data
     updatedKYC.status = "Approved"
     updatedKYC.processed_on = new Date().toISOString()
-    let { record } = await contacts(client).update(contact.records[0].display_id, updatedKYC);
-    renderDataTable(client, record.data);
-  }
-  
-  async function rejectKYC(client, rowData) {
+    await contacts(client).update(contact.records[0].display_id, updatedKYC);
+    await getPendingRecords(client)
+}
+
+async function rejectKYC(client, rowData) {
     let customer_email = rowData.customer_email
     let contact = await contacts(client).getAll({
-      query: {
-        customer_email
-      },
+        query: {
+            customer_email
+        },
     })
     let updatedKYC = contact.records[0].data
     updatedKYC.status = "Rejected"
     updatedKYC.processed_on = new Date().toISOString()
-    let { record } = await contacts(client).update(contact.records[0].display_id, updatedKYC);
-    renderDataTable(client, record.data);
-  }
+    await contacts(client).update(contact.records[0].display_id, updatedKYC);
+    await getPendingRecords(client)
+}
 
 function renderDataTable(client, records) {
     const data = {
@@ -96,10 +101,10 @@ function renderDataTable(client, records) {
         }
         ],
         rows: records.map((r) => ({
-            customer_email: r.customer_email,
-            applied_on: r.applied_on,
-            document_type: r.document_type,
-            status: r.status,
+            customer_email: r.data.customer_email,
+            applied_on: r.data.applied_on,
+            document_type: r.data.document_type,
+            status: r.data.status,
         })),
     };
     const kycDetails = document.getElementById("kyc_pending");
@@ -118,10 +123,14 @@ function renderDataTable(client, records) {
  * @param {object} client - The client object
  */
 async function lookupHistory(client) {
-    const entity = client.db.entity({ version: "v1" });
-    const history = entity.get("kyc_status");
+    const history = await contacts(client)
     const { records } = await history.getAll({
         query: { status: "Pending" },
     });
     return records;
+}
+
+function contacts(client) {
+    const entity = client.db.entity({ version: "v1" });
+    return entity.get("kyc_status");
 }
