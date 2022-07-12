@@ -14,6 +14,8 @@ The repository contains sample apps demonstrating the usage of [Entity Storage â
 
 ### Freshsales / Freshworks CRM
 - [Freshsales contact KYC Status app](freshsales-suite/contact-kyc/) - An app which simulates KYC approval/rejection for Freshsales contacts using Entity Storage.
+
+
 ## License
 
 MIT
