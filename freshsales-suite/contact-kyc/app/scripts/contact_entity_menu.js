@@ -18,19 +18,24 @@ document.onreadystatechange = function () {
   }
 };
 
-async function getContact(client, currentEntityId, iparams) {
-  const url = `${iparams.fcrm_domain}api/contacts/${currentEntityId}`;
-  const options = {
-    headers: {
-      Authorization: `Token token=${iparams.fcrm_api_key}`
+function getContact(client, currentEntityId, iparams) {
+  try {
+    const url = `${iparams.fcrm_domain}api/contacts/${currentEntityId}`;
+    const options = {
+      headers: {
+        Authorization: `Token token=${iparams.fcrm_api_key}`
+      }
     }
+    return client.request.get(url, options);
+  } catch (e) {
+    console.log("Error calling Freshworks CRM API ", e)
+    return
   }
-  return await client.request.get(url, options);
 }
 
 async function createContactEntity(client, contactDetails) {
   let contact_entity = await contacts(client);
-  contact_entity.create({
+  await contact_entity.create({
     customer_email: contactDetails.email,
     status: "Pending",
     applied_on: new Date().toISOString().split("T")[0],
