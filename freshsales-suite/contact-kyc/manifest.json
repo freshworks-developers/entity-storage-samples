@@ -27,7 +27,7 @@
     }
   },
   "whitelisted-domains": [
-    "https://*.freshworks.com"
+    "<%= iparam.fcrm_domain %>"
   ],
   "engines": {
     "node": "14.19.1",
