@@ -8,7 +8,6 @@ Once the record is created, KYC status is pending where you can either approve i
 
 ### Contact Entity menu
 
-
 | Description                  | Screenshot                                                                          |
 | ---------------------------- | ----------------------------------------------------------------------------------- |
 | KYC Status as pending        | ![Pending KYC status screenshot](screenshots/pending-contact-entity-menu.png)       |
