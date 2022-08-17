@@ -26,9 +26,7 @@
       }
     }
   },
-  "whitelisted-domains": [
-    "<%= iparam.fcrm_domain %>"
-  ],
+  "whitelisted-domains": ["<%= iparam.fcrm_domain %>"],
   "engines": {
     "node": "14.19.1",
     "fdk": "8.3.3"
