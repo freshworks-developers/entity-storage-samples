@@ -38,20 +38,27 @@
         "type": "section",
         "fields": [
           {
-            "name": "document_type",
-            "label": "Document Type",
-            "type": "enum",
-            "choices": [
-              { "id": 1, "value": "Passport" },
-              { "id": 2, "value": "Voter ID" }
-            ],
-            "required": true
-          },
-          {
-            "name": "document_id",
-            "type": "text",
-            "label": "Document ID/number",
-            "required": true
+            "name": "document_details",
+            "label": "Document details",
+            "type": "section",
+            "fields": [
+              {
+                "name": "document_type",
+                "label": "Document Type",
+                "type": "enum",
+                "choices": [
+                  { "id": 1, "value": "Passport" },
+                  { "id": 2, "value": "Voter ID" }
+                ],
+                "required": true
+              },
+              {
+                "name": "document_id",
+                "type": "text",
+                "label": "Document ID/number",
+                "required": true
+              }
+            ]
           },
           {
             "name": "document_url",
