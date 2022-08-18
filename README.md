@@ -12,7 +12,7 @@ The repository contains sample apps demonstrating the usage of [Entity Storage â
 ### Freshservice
 - [Freshservice employees sync-app](freshservice/employee-sync/) - An app that syncs employee data to Freshservice and stores it using Entity Storage.
 
-### Freshsales / Freshworks CRM
+### Freshsales Suite and Freshsales Classic (formerly Freshworks CRM)
 - [Freshsales contact KYC Status app](freshsales-suite/contact-kyc/) - An app which simulates KYC approval/rejection for Freshsales contacts using Entity Storage.
 
 
