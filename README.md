@@ -1,21 +1,20 @@
-# Sample apps for Entity Storage
+## Your First App
 
-The repository contains sample apps demonstrating the usage of [Entity Storage — Custom Objects](https://developers.freshdesk.com/v2/docs/entity-storage-custom-objects/) in apps built for the Freshworks Marketplace.
+This app displays the name of the requester of a freshdesk ticket in the ticket_sidebar placeholder
 
-## Apps
+### Files and Folders
+    .
+    ├── README.md                 A file for your future self and developer friends to learn about app
+    ├── app                       A folder to place all assets required for frontend components
+    │   ├── index.html            A landing page for the user to use the app
+    │   ├── scripts               JavaScript to place files frontend components business logic
+    │   │   └── app.js
+    │   └── styles                A folder to place all the styles for app
+    │       ├── images
+    │       │   └── icon.svg
+    │       └── style.css
+    ├── config                    A folder to place all the configuration files
+    │   └── iparams.json
+    └── manifest.json             A JSON file holding meta data for app to run on platform
 
-### Freshdesk
-
-- [Custom ToDos](freshdesk/custom-todos/) - A simple sample Freshdesk app that manages a shared list of ToDos using Entity Storage. Covers just the basics.
-- [Freshfoods](freshdesk/freshfoods/) - A sample Freshdesk app that demonstrates a restaurant use case. More complex, but presents an end-to-end view of Entity Storage in all its complexity.
-
-### Freshservice
-- [Freshservice employees sync-app](freshservice/employee-sync/) - An app that syncs employee data to Freshservice and stores it using Entity Storage.
-
-### Freshsales Suite and Freshsales Classic (formerly Freshworks CRM)
-- [Freshsales contact KYC Status app](freshsales-suite/contact-kyc/) - An app which simulates KYC approval/rejection for Freshsales contacts using Entity Storage.
-
-
-## License
-
-MIT
+Explore [more of app sample apps](https://community.developers.freshworks.com/t/freshworks-sample-apps/3604) on the Freshworks github respository.
