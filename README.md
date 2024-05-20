@@ -1,6 +1,12 @@
-## Your First App
+## Entity Storage sample app
 
-This app displays the name of the requester of a freshdesk ticket in the ticket_sidebar placeholder
+This sample app demonstrates [entity storage](https://developers.freshworks.com/docs/app-sdk/v3.0/support_contact/data-store/entity-storage/) on Platform version 3.0 in different modules
+
+| Module | Works in Product |
+| ----- | ------- |
+| `support_ticket` | Freshdesk |
+| `support_contact` | Freshdesk |
+| `contact` | Freshsales Suite, Freshworks CRM |
 
 ### Files and Folders
     .
